@@ -35,8 +35,57 @@ communication and control network.  It is tautological that any communications n
 We propose a strategic adversary with strong abilities, and model the adversary's interaction with the grid as a game.
 We present optimal strategies for the attacker and defender under different assumptions and show .... (not sure yet).
 
-\section{Design}
-\section{Implementation}
+\section{Model}
+
+\subsection{Producer}
+
+We focus on renewable energy sources, which provide a fluctuating amount of power.  We model them as exponential random 
+number generators [justification?, other possiblities: uniform, power-law].
+
+\subsection{Consumer}
+
+Following [citation here] we have three classes of consumer: buckets, batteries, and bakeries.  
+
+\subsection{Utility}
+
+The utility's goal is to dispatch all power generated in a given time period.  Excess power is wasted, and shortfalls are 
+made up from expensive standby generators.  
+
+\subsection{Topology}
+
+Power-law topology for consumers / producers.  We may want to dodge this.
+
+\section{Game}
+
+Our game is played between a strategic adversary that seeks to maximally disrupt the grid, within the constraints of his
+resources and the utility company whose objective was given in [utility subsection].  
+
+\subsection{Adversary}
+
+We consider three different capability sets for the adversary:
+
+\begin{itemize}
+\item The attacker can jam communication between the utility and producers / consumers.  We consider scenarios where the
+attacker can jam 10\%, 30\%, 60\%, and 90\% of communication links with producers / consumers.
+\item Attacker can modify the communicated demand from consumers / supply from producers.  Here the attacker is constrained
+to a small change in order to remain undetected. This is a false data injection attack.
+\item  Attacker can change the consumer's time constraints (effectively change their class).
+\end{itemize}
+
+The attackers optimization function is the inverse of the utilities: trying to maximize instead of minimize.
+
+\subsection{Utility}
+
+Utility defaults to base state for each consumer if communication fails.  Conceptually, this is their demand at the same 
+point the prior day.
+
+Utility seeks to minimize power wastage / excess demand.
+
+Utility can schedule the known demand of consumers in order to minimize this wastage.  What scheduling strategies
+should the utility use, is this something we want to get into?
+
+What is the Utilities defensive strategy: detect? If detect, can it do better than fall back to default?
+
 \section{Experimental Results}
 \section{Related Work}
 \section{Conclusions}
