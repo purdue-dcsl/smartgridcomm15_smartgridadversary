@@ -94,6 +94,60 @@ grids
 
 ---------
 
+A Control and Communications Architecture for a Secure and
+Reconfigurable Power Distribution System: An Analysis and Case Study
+
+On how to do dynamic power distribution in a reliable fashion.
+Not really a security paper, and in a "World Congress" which seems
+dodgy.  Inclined not to cite.
+
+-------
+
+A Survey on Advanced Metering Infrastructure and
+its Application in Smart Grids
+
+Overview of AMI, networks, goals, communication technologies,
+etc.  security section focuses on privacy of user data.
+
+-----
+
+Model-Based Attack Detection and Mitigation for
+Automatic Generation Control
+
+More on false data injection attacks.  Focuses on AGC (Automatic
+Generation Control), which is responsible for modulating the frequency
+of the grid.  Want to maintain 60HZ and keep lines at correct level.
+Notions of balancing areas and tie lines.  They also look at detection
+and mitigation.
+
+Only skimmed.
+
+------
+
+Detection of False Data Injection
+Attacks in Smart-Grid Systems
+
+Magazine article on False data injection
+attacks.  They use spatial-temporal correlations as a detection mechanism.
+This seems somewhat fragile and prone to breakage (ie, just attack the entire
+area).
+
+-------
+
+Vulnerability Assessment of Cybersecurity for
+SCADA Systems Using Attack Trees
+
+Oldish paper: 2007.  Title kind of says it all
+
+--------
+
+Cyber Intrusion of Wind Farm SCADA System
+and Its Impact Analysis
+
+fairly simplistic, looks at basic known attacks such at brute forcing a PIN
+for authentication, or tapping fiber optics.  Then demonstrates that 
+malicious commands that cause damage exists.  Who'd've thought?
+
 
 
 
