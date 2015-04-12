@@ -1,0 +1,50 @@
+On False Data Injection Attacks against Distributed
+Energy Routing in Smart Grid
+
+Looks at attacks against distributed energy routing using false data injection.
+They assume a static topology, know to each node.
+Suply nodes, demand nodes, communication links, and energy links.
+Try to satisfy everyone while minimizing cost of transmission.
+Increase demand, decrease supply, and futz with topology as attacks.
+Analyze effects formally and through simulation.  Show increased costs and potential outages.
+
+---------------------
+
+ NCS Security Experimentation using DETER
+
+
+Integrate Networked Control Systems (NCS) and SCADA into their DETER framework
+for network experimentation.
+DETER's low level modeling and accuracy makes this possible, and realisitic
+analysis of DDoS attacks on the smart grid w/ a high level of fidelity
+possible.
+
+-----------------
+
+Modeling Load Redistribution Attacks in
+Power Systems
+
+Load redistribution attacks as a special case of false data injection with
+immediate and delayed effects.  Lots of linear algebra.  Show how false data
+injection can be invisible to current state estimation systems.
+
+Their effective protection strategy amounts to noting that the goal is to 
+make the attack detectable, and determining how many nodes they need to do 
+so for a given state algorithm.  They don't actually concretely solve this 
+problem, merely outline it.
+
+--------------
+
+A Taxonomy for Modeling Flexibility and a Computationally Efficient
+Algorithm for Dispatch in Smart Grids
+
+Buckets, batteries, and bakeries oh my!
+
+Define each class, note that the goal is to dispatch all generated 
+power at a given time step.
+
+Their agile balancing algorithm works best according to their simulations.
+Note: not really sure how they are coming up with PDispatch, they don't 
+seem to say in the paper.
+
+---------
