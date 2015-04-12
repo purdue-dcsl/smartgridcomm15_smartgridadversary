@@ -48,3 +48,95 @@ Note: not really sure how they are coming up with PDispatch, they don't
 seem to say in the paper.
 
 ---------
+
+Optimal Control in the Presence of an Intelligent Jammer with Limited
+Actions
+
+Considers a game between two players, one the controller of a power plant
+the other the adversary.  Adversary has a limited number of jamming actions.
+Find equilibrium strategies for both.  Both formally derive results and
+back them up with simulation.  Lots of math.  Only analyze the case where the 
+adversary can jam once, find that he should do so when the state space is
+large.
+
+----------
+
+Security of Smart Distribution Grids:
+Data Integrity Attacks on Integrated Volt/VAR Control and Countermeasures
+
+Game theoretic model of data integrity attacks on line voltage readings, with
+the goal of making the operator run the line at a higher than necessary
+voltage.  Defines notions of stealthiness in this context, and presents a 
+game theoretic model.  In particular, looks at capacitor configurations
+at substations.  
+
+---------
+
+Cybersecurity for Critical Infrastructures:
+Attack and Defense Modeling
+
+Has a very in depth survery / related work section at the beginning.
+
+Present a new algorithm for evaluation cybersecurity that considers
+password policies and port auditing.  a lot of risk assesment work
+around attack trees.
+
+--------
+
+Towards a Framework for Cyber Attack Impact
+Analysis of the Electric Smart Grid
+
+How to model the grid and its inter-dependencies as a graph,
+taking into account functional information and constraints.
+
+Proposes a methodology for doing impact analysis on smart
+grids
+
+---------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
