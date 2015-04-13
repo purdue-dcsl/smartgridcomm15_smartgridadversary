@@ -100,41 +100,92 @@ resources and the utility company whose objective is to dispatch all power at th
 
 \subsection{Adversary}
 
-We consider three different adversary models:
+We consider X different adversary models:
 
 \begin{itemize}
-\item [Jamming] The attacker can jam communication between the utility and producers / consumers.  We consider scenarios 
+\item Jamming. The attacker can jam communication between the utility and producers / consumers.  We consider scenarios 
 where the attacker can jam 30\% or 60\% of communications between producers / consumers and the utility.
 
 TODO: This is not particuarly novel, there is prior work on jamming.  
 
-\item [False Data Injection - Load] The attacker can modify the communicated demand from consumers / supply from producers.  
+\item False Data Injection - Load. The attacker can modify the communicated demand from consumers / supply from producers.  
 Here the attacker is constrained to a small change of less than 50\%.  We analyses scenarios where the attacker can modify
 30\% or 60\% of the communicated information.
 
-TODO: There is a lot of prior work on vanilla FDI, not novel.
+TODO: There is a lot of prior work on vanilla FDI, not novel.  Though we could perhaps sell it in this context.
+TODO: Possbile novelty:  What if any constraints to inject.  IE the load is a new job, which of the 3 B's should it be?
+we could do the next two bullet points first to determine that, then move to this "more sophisticated" version of the 
+attack.
 
-\item [False Data Injection - Modify Constraints] Attacker can change the consumer's time constraints.  The attacker can
-thereby decrease the flexibility .....
+\item False Data Injection - Modify Constraints. Attacker can change the consumer's time constraints.  The attacker can
+thereby decrease the flexibility available to the utility.  The attacker would identify the largest loads possible and 
+change their constraints so that they all have to receive power now.  We constrain the attacker to only be able to modify the
+constraints of 30\% or 60\% of customers.
 
-\item [False Data Injection - Add Constraints]
+TODO:  This seems to be the novelty for having the heterogenous consumers.
+
+\item False Data Injection - Add Constraints.  Buckets are very useful to the utility in scheduling because they provide
+the most additional flexibility.  The attacker could target them by adding constraints such that the buckets become bakeries.
+The same constraints on the number of actions the attacker is allowed to perform apply.
+
+TODO: This is also novel.  Should we change the rules s.t. there is a cost per constraint added vs per customer effected?
+
 \end{itemize}
 
-The attackers optimization function is the inverse of the utilities: trying to maximize instead of minimize.
+The attacker's goal is to maximize the cost to the utility.
+
+TODO: Phrasing on that goal?  It is important to have this nailed down.
+TODO: Flesh this section out, bare bones right now until we agree on everything.
 
 \subsection{Utility}
 
-Utility defaults to base state for each consumer if communication fails.  Conceptually, this is their demand at the same 
-point the prior day.
+The utilities core strategy is to detect and correct for any malicious communications.  This will allow its performance to be
+constrained solely by its scheduling algorithm (out baseline) and not by the attacker.
 
-Utility seeks to minimize power wastage / excess demand.
+\begin{itemize}
+\item Jamming.  Jamming is always detected.  The utility corrects for this by using historical data.  We examine the effects 
+of the historical data being 5\%, 20\%, or 50\% inaccurate.
 
-Utility can schedule the known demand of consumers in order to minimize this wastage.  What scheduling strategies
-should the utility use, is this something we want to get into?
+\item FDI - Load.  Following prior work, we assume that this is undetectable given the attacker constraints.  Consequently
+the utility has no strategy in this case because it cannot distinguish it from the default case of no attack.
 
-What is the Utilities defensive strategy: detect? If detect, can it do better than fall back to default?
+\item FDI - Modify Constraints.  Utility's strategy here should be to only allow constraints to be relaxed.  This will prevent
+the attacker from removing flexibility from the system.
+
+TODO: Justifiable?  Realisitic?  I think this is sellable: the user has to authenticate or do something more complicated like
+cancel the job and add a new one (also authenticated), but can't mutate the job.
+
+\item FDI - Add Constraints.  Utility does not allow any constraints to be added.
+
+TODO: Justifiable?  Realistic?  seems too black and white.
+
+TODO: Is our contribution to show what the attacker could do if these things were allowed as justification for banning them?
+TODO: Do we only end up allowing the addition of new jobs, which throws us back to the FDI-load scenario, and detecting 
+malicious injections?  I guess we could comment on what constraints / mix of constraints the attacker would want to impose.
+
+\end{itemize}
+
+Need to comment on a cost function / equivalent for the utility.
+
+Utility's scheduling algorithm is the Agile Balancing algorithm presented in ... We use this for evaluating the attacks.
+
+TODO:  We really ought to consider multiple scheduling algorithms, so that the results aren't dependent on the algorithm 
+used.  Likely a bridge too far though.
 
 \section{Experimental Results}
+
+TODO: Need to show baseline (ie under the previously published scheduling algorithm) vs with attacker results.  Probably
+do figures by attack class, and show the percentage degradation in performance.  Have multiple lines for each level of attacker
+capability (ie how many customers / producers the attacker was able to effect).
+
+TODO: Perhaps we should show with / without proposed defenses.
+
 \section{Related Work}
+
+TODO: I have the notes to write this up.  Mainly waiting until I am on my laptop with Bibtex, or can get it installed at school.
+
 \section{Conclusions}
+
+TODO:  Filler!  Huzzah now we are at 6 pages.
+
 \end{document}
