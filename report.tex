@@ -67,7 +67,18 @@ number generators [justification?, other possiblities: uniform, power-law].
 
 \subsection{Consumer}
 
-Following [citation here] we have three classes of consumer: buckets, batteries, and bakeries.  
+We model three different types of consumers, classified based on the flexibility of their demand.  These follow the standard
+templates in literature for heterogenous consumers.
+
+The first and most flexible class is buckets.  Buckets are modeled after (... check the citation).  As such, they can store
+power up to their maximum capacity.  Buckets also consume power, and have a minimum floor that they cannot fall beneath.
+
+The second class are batteries.  Batteries have to be charged (receive a given amount of power) by a fixed end point.  However,
+they do not have to charge continuously, and do not loose power when not being charged.
+
+The least flexible class are bakeries.  Like batteries, bakeries must receive a given amount of power, unlike batteries they
+must receive power continuously.  Intutitively, think of baking bread.  The over must remain on continuously for the bread
+to be properly baked (ie edible).
 
 \subsection{Utility}
 
