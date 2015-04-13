@@ -1,5 +1,6 @@
-\documentclass{article}
+\documentclass[conference]{IEEEtran}
 
+\usepackage{cite}
 \usepackage{float}
 \usepackage{multicol}
 \usepackage{graphicx}
@@ -7,22 +8,27 @@
 \usepackage{hyperref}
 \usepackage{epstopdf}
 
+\hyphenation{op-tical net-works semi-conduc-tor}
+
 \begin{document}
 
-\title{Thoughts about Stuff}
+\title{Modeling Power Distribution to Heterogenous Customers in the Presence of a Strategic Adversary}
 
-\author{Nathan Burow, Saurabh Bagchi}
+\author{\IEEEauthorblockN{Nathan Burow, Saurabh Bagchi}
+	\IEEEauthorblockA{Purdue University \\ \{nburow, sbagchi\}@purdue.edu}
+}
 
 \maketitle
-\begin{multicols}{2}
 
+\begin{abstract}
 Abstract goes here, especially once I get this in a better / more rigorous format.  Bare bones for now.
+\end{abstract}
 
 \section{Introduction}
 
 It is trite but true that the power grid underlies most of modern civilization.  Traditionally the power grid has had a 
 few fixed producers that sell power to utilities, who in turn distribute it to their customers.  Traditionally these 
-customers have not coordinated with eachother, but simply bought whatever power they need at the prevailing price.  
+customers have not coordinated with the utility, but simply bought whatever power they need at the prevailing price.  
 Similarily, utilities have simply ensured that they have enough power to meet their customer's demands.  
 
 The future will be very different.  More producers will enter the grid as renewables like wind and solar become more
@@ -30,10 +36,27 @@ prevalent.  Increased connectivity through the Smart Grid will allow consumers t
 demand during peak usage (and thus peak price) hours where possible.  This will smooth the demand curve that utilities face,
 and make the grid more predictable.
 
-The benefits of the Smart Grid rely on making the power-grid a cyber-physical system (CPS) by overlaying a cyber 
-communication and control network.  It is tautological that any communications network can and will be attacked.  
-We propose a strategic adversary with strong abilities, and model the adversary's interaction with the grid as a game.
-We present optimal strategies for the attacker and defender under different assumptions and show .... (not sure yet).
+In the smart grid, consumers will communicate their power demands and constraints to the utility, who will then schedule
+power dispatch to them accordingly.  The crucial insight here is that some power consumption, such as running the dishwasher
+or charging an electric vehicle, is flexible as long as it is completed by a certain time.  Other power consumption, such as
+running the AC in the summer is not flexible.  In total though, this will give the utility more flexibility in dispatching power,
+and will smooth demand.
+
+Offsetting the demand smoothing from increased consumer flexibility will be increased variation in power supply.  More and
+more power will come from distributed and unpredictable sources: renewables such as wind and solar.  These power supplies
+may flucuate during the day, and the level of power available from them at any given point is not knowable in advance.
+
+This creates a coordination and scheduling problem for the utility.  The utilities goal is to use all available power at any
+given time, constrained by the need to meet consumer's demands.  If the utility faces a short fall, it has to turn to more 
+expensive standby power sources to make up the difference.  Any power that the utility cannot dispatch is wasted.
+
+This scheduling problem is not the only difficulty facing the utility though.  Information about consumer power demands and 
+constraints as well as the amount of power being produced flows over a communications network, and it is tautological that 
+any communications network can and will be attacked.  We propose a malicious strategic adversary with strong abilities, whose
+goal is to destabilize the grid while remaining undetected. 
+
+TODO: Finish overview of our paper and results.  Add citations.  This introduction may well serve as the related works 
+section if need be.
 
 \section{Model}
 
@@ -89,5 +112,4 @@ What is the Utilities defensive strategy: detect? If detect, can it do better th
 \section{Experimental Results}
 \section{Related Work}
 \section{Conclusions}
-\end{multicols}
 \end{document}
