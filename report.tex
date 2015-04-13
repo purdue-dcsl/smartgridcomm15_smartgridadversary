@@ -62,8 +62,11 @@ section if need be.
 
 \subsection{Producer}
 
-We focus on renewable energy sources, which provide a fluctuating amount of power.  We model them as exponential random 
-number generators [justification?, other possiblities: uniform, power-law].
+We focus on renewable energy sources, which provide a fluctuating amount of power.  Each sources produces a uniform random 
+amount of power in a given interval.  This amount of production is bounded by the minimum for the source and its maximum
+production capacity.
+
+TODO: Is this the right way to go here?
 
 \subsection{Consumer}
 
@@ -80,30 +83,41 @@ The least flexible class are bakeries.  Like batteries, bakeries must receive a 
 must receive power continuously.  Intutitively, think of baking bread.  The over must remain on continuously for the bread
 to be properly baked (ie edible).
 
+TODO: Give the equations, or maybe just say they are in the reference?
+
 \subsection{Utility}
 
-The utility's goal is to dispatch all power generated in a given time period.  Excess power is wasted, and shortfalls are 
-made up from expensive standby generators.  
+The utility's goal is to dispatch all power generated in a given time period.  Each megawatt of power wasted incurs a penalty,
+ad does each megawatt of power that has to be used from standby sources.
 
-\subsection{Topology}
-
-Power-law topology for consumers / producers.  We may want to dodge this.
+TODO: Should these penalties be weighted?  I'm inclined to say that standby should have a larger penalty: perhaps 2x.
 
 \section{Game}
 
-Our game is played between a strategic adversary that seeks to maximally disrupt the grid, within the constraints of his
-resources and the utility company whose objective was given in [utility subsection].  
+This section defines the game at a given time step.  We work with both single and multi-round games in our analysis.
+The game is played between a strategic adversary that seeks to maximally disrupt the grid, within the constraints of his
+resources and the utility company whose objective is to dispatch all power at the time step.   
 
 \subsection{Adversary}
 
-We consider three different capability sets for the adversary:
+We consider three different adversary models:
 
 \begin{itemize}
-\item The attacker can jam communication between the utility and producers / consumers.  We consider scenarios where the
-attacker can jam 10\%, 30\%, 60\%, and 90\% of communication links with producers / consumers.
-\item Attacker can modify the communicated demand from consumers / supply from producers.  Here the attacker is constrained
-to a small change in order to remain undetected. This is a false data injection attack.
-\item  Attacker can change the consumer's time constraints (effectively change their class).
+\item [Jamming] The attacker can jam communication between the utility and producers / consumers.  We consider scenarios 
+where the attacker can jam 30\% or 60\% of communications between producers / consumers and the utility.
+
+TODO: This is not particuarly novel, there is prior work on jamming.  
+
+\item [False Data Injection - Load] The attacker can modify the communicated demand from consumers / supply from producers.  
+Here the attacker is constrained to a small change of less than 50\%.  We analyses scenarios where the attacker can modify
+30\% or 60\% of the communicated information.
+
+TODO: There is a lot of prior work on vanilla FDI, not novel.
+
+\item [False Data Injection - Modify Constraints] Attacker can change the consumer's time constraints.  The attacker can
+thereby decrease the flexibility .....
+
+\item [False Data Injection - Add Constraints]
 \end{itemize}
 
 The attackers optimization function is the inverse of the utilities: trying to maximize instead of minimize.
