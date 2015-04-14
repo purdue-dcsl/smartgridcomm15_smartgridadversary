@@ -10,7 +10,6 @@ all: pdf
 	
 pdf: 	
 	pdflatex ${TEXFILE}.tex
-	pdflatex ${TEXFILE}.tex
 	- bibtex ${TEXFILE}.aux
 	pdflatex ${TEXFILE}.tex
 	pdflatex ${TEXFILE}.tex
