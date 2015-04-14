@@ -1,4 +1,5 @@
-
+import java.io.*;
+import java.lang.Math;
 
 public class Bakery {
 
@@ -44,7 +45,7 @@ public class Bakery {
 		return t_done - run - t_curr;
 	}
 
-	public boolean forced(double t_curr){
-		return (this.agility(t_curr) > 1) ? false : true;
+	public double forced(double t_curr){
+		return (this.agility(t_curr) > 1) ? 0 : p_max;
 	}
 }
