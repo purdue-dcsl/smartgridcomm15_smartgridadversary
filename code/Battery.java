@@ -1,9 +1,9 @@
-import java.io.*;
+
 
 public class Battery{
 	private double e_max;
 	private double p_max;
-	private int t_done;
+	private double t_done;
 
 	private double e_curr;
 
@@ -18,7 +18,7 @@ public class Battery{
 	public void consume(double p_dispatch){
 		if(p_dispatch > p_max) {
 			System.out.println("error - too much power to a battery");
-			System.exit();
+			System.exit(1);
 		}
 		e_curr += p_dispatch;
 	}

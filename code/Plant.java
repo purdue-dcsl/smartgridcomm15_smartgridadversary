@@ -19,7 +19,7 @@ public class Plant {
 		r = new Random(123456789);
 	}
 
-	public int produce(){
+	public double produce(){
 		return r.nextGaussian()*stddev+mean;  
 	}
 }

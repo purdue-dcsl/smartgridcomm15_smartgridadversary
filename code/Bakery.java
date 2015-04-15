@@ -1,4 +1,4 @@
-import java.io.*;
+
 import java.lang.Math;
 
 public class Bakery {
@@ -15,7 +15,7 @@ public class Bakery {
 		this.e_max = e;
 		this.p_max = p;
 		this.t_done = t;
-		run = Math.floor(e_max / p_max);
+		run = (int)Math.floor(e_max / p_max);
 		run = (e_max % p_max > 0) ? run + 1 : run;  //round up if e / p has a remainder
 	
 		this.running = false;

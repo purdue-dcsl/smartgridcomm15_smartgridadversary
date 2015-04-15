@@ -1,4 +1,4 @@
-import java.io.*;
+
 
 public class Bucket{
 	private double e_max;   //max energy stored
@@ -8,11 +8,11 @@ public class Bucket{
 
 	private double e_curr;  //current energy state
 
-	Bucket(double etop, double ebot, double ptop, double pmin){
+	Bucket(double etop, double ebot, double ptop, double pbot){
 		e_max = etop;
 		e_min = ebot;
 		p_max = ptop;
-		p_mix = pbot;
+		p_min = pbot;
 		e_curr = 0;
 	}
 
@@ -36,11 +36,11 @@ public class Bucket{
 	public void consume(double p_dispatch){
 		if(p_dispatch > p_max){
 			System.out.println("error - too much power to a bucket");
-			System.exit();
+			System.exit(1);
 		}
 		else if (e_curr + p_dispatch > e_max || e_curr + p_dispatch < e_min){
 			System.out.println("error - violating bucket energy constraints");
-			System.exit();
+			System.exit(1);
 		}
 		e_curr += p_dispatch;
 	}
