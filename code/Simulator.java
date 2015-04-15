@@ -6,13 +6,13 @@ public class Simulator{
 
 	public static final int numBakery = 40;
 	public static final int numBattery = 40;
-	public static final int numBucket = 40;
+	public static final int numBucket = 10;
 
-	public static final int power_mean = 1200;
-	public static final int power_sdev = 120;
+	public static final int power_mean = 1200;    //absolute mean for power plant
+	public static final int power_sdev = 120;     //absolute sdev for power plant
 	
-	public static final double cust_p_range = 10;
-	public static final double cust_sdev = 1;
+	public static final double cust_p_range = 10; //how big a range for power consume in one time step
+	public static final double cust_sdev = .6;    //percentage of mean
 
 	public static double forced(Constrained[] cust, int num_cust, double time){
 		double ret = 0;
@@ -95,23 +95,39 @@ public class Simulator{
 			double tmp = bucket_d;
 			int j = 0;
 			double cur;
+			double bucket_actual = 0;
 			if(tmp > 0) {
 				cur = buckets[j].getMaxPositiveConsume();
-				while(tmp > 0 && cur > 0){
+				while(cur > 0 && tmp - cur > 0 && j < numBucket){
 					buckets[j++].consume(cur);
 					tmp -= cur;
-					cur = buckets[j].getMaxPositiveConsume();
+					bucket_actual += cur;
+					if(j < numBucket)
+						cur = buckets[j].getMaxPositiveConsume();
+					else break;
+				}
+				if(cur > 0 && tmp > 0 && j < numBucket) {
+					buckets[j].consume(tmp);
+					bucket_actual += tmp;
 				}
 			}
 			else if(tmp < 0){
 				cur = buckets[j].getMaxNegativeConsume();
-				while(tmp < 0 && cur < 0){
+				while(cur < 0 && tmp - cur < 0 &&j < numBucket){
 					buckets[j++].consume(cur);
 					tmp -= cur;
-					cur = buckets[j].getMaxNegativeConsume();
-				}				
+					bucket_actual += cur;
+					if(j < numBucket)
+						cur = buckets[j].getMaxNegativeConsume();
+					else break;
+				}	
+				if(cur < 0 && tmp < 0 && j < numBucket) {
+					buckets[j].consume(tmp);
+					bucket_actual += tmp;
+				}
 			}
-			imbalance += dispatch - dispatched - bucket_d;
+			System.out.printf("dispatch: %f\tdispatched: %f\tbucket: %f\n", dispatch, dispatched, bucket_actual);
+			imbalance += dispatch - dispatched - bucket_actual;
 		}
 		return imbalance;
 	}
