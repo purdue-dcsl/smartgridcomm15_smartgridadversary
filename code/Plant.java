@@ -20,6 +20,6 @@ public class Plant {
 	}
 
 	public double produce(){
-		return r.nextGaussian()*stddev+mean;  
+		return r.nextGaussian()*stddev+mean; 
 	}
 }

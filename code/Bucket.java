@@ -34,7 +34,7 @@ public class Bucket{
 	//consume the power dispatched to the bucket.  Dispatch is negative
 	//if the bucket is being tapped for power
 	public void consume(double p_dispatch){
-		if(p_dispatch > p_max){
+		if(p_dispatch > p_max || p_dispatch < p_min){
 			System.out.println("error - too much power to a bucket");
 			System.exit(1);
 		}

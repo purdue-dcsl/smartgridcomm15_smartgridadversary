@@ -1,11 +1,11 @@
 
-
-public class Battery{
+public class Battery implements Constrained, Comparable<Constrained>{
 	private double e_max;
 	private double p_max;
 	private double t_done;
 
 	private double e_curr;
+	private double ag_factor;
 
 	public Battery(double e_max, double p_max, double t_done){
 		this.e_max = e_max;
@@ -23,15 +23,24 @@ public class Battery{
 		e_curr += p_dispatch;
 	}
 
-	public double agility(int t_curr){
-		return t_done - t_curr - (e_max - e_curr)/p_max;
+	public double agility(double t_curr){
+		ag_factor = t_done - t_curr - (e_max - e_curr)/p_max;
+		return ag_factor;
 	}
 
-	public double forced(int t_curr){
+	public double forced(double t_curr){
 		double ag = this.agility(t_curr);
 
 		if(ag > 1) return 0;
 		else if(ag > 0) return p_max*(1-ag);
 		else return p_max;
+	}
+	public double getAgility(){
+		return this.ag_factor;
+	}
+	
+	public int compareTo(Constrained c){
+		if(ag_factor - c.getAgility() > 0) return 1;
+		else return -1;
 	}
 }

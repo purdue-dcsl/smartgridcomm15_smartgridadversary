@@ -1,40 +1,44 @@
 
 import java.lang.Math;
 
-public class Bakery {
+public class Bakery implements Constrained, Comparable<Constrained>{
 
 	private double e_max;  //total energy to consume
 	private double p_max;  //amount of power can consume in 1 time step
 	private double t_done; //when it has to finish by
-	private int run;    //how long it has to run;
+	private double run;    //how long it has to run;
 
 	private boolean running;
-	private int count;
+	private double e_curr;
+	private double ag_factor;
 
 	Bakery(double e, double p, double t){
 		this.e_max = e;
 		this.p_max = p;
 		this.t_done = t;
-		run = (int)Math.floor(e_max / p_max);
-		run = (e_max % p_max > 0) ? run + 1 : run;  //round up if e / p has a remainder
+		run = Math.ceil(e_max / p_max);
 	
 		this.running = false;
-		this.count = 0;
+		this.e_curr = 0;
 	}
-	public void start(){
+	private void start(){
 		this.running = true;
 	}
-	public boolean isRunning(){
+	private boolean isRunning(){
 		return running;
 	}
-	public double getPower(){
-		return p_max;
-	}
-	public void consume(){
-		count++;
+	public void consume(double p_dispatch){
+		if(p_dispatch < p_max){
+			System.out.println("Error - bakery didn't get enough power");
+			System.exit(1);
+		}
+		if(this.isFinished()) return;
+		if(!this.isRunning()) this.start();
+		e_curr += p_dispatch;
+		this.isFinished();
 	}
 	public boolean isFinished(){
-		if(count >= run) {
+		if(e_curr >= e_max - .0000001) {
 			running = false;
 			return true;
 		}
@@ -42,10 +46,21 @@ public class Bakery {
 	}
 
 	public double agility(double t_curr){
-		return t_done - run - t_curr;
+		ag_factor = t_done - run - t_curr;
+		return ag_factor;
 	}
 
 	public double forced(double t_curr){
-		return (this.agility(t_curr) > 1) ? 0 : p_max;
+		if (this.isFinished()) return 0;
+		return (this.agility(t_curr) > 1) ? 0 : Math.min(p_max, e_max - e_curr);
+	}
+	
+	public double getAgility(){
+		return this.ag_factor;
+	}
+	
+	public int compareTo(Constrained c){
+		if(ag_factor - c.getAgility() > 0) return 1;
+		else return -1;
 	}
 }
