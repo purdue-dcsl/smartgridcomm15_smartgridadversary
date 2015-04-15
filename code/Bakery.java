@@ -13,11 +13,16 @@ public class Bakery implements Constrained, Comparable<Constrained>{
 	private double ag_factor;
 
 	Bakery(double e, double p, double t){
+		if(e < 0 || p < 0 || t < 0){
+			System.out.println("illegal arguments to a new bakery");
+			System.exit(1);
+		}
 		this.e_max = e;
 		this.p_max = p;
 		this.t_done = t;
 		run = Math.ceil(e_max / p_max);
 	
+		ag_factor = 0;
 		this.running = false;
 		this.e_curr = 0;
 	}
@@ -52,7 +57,7 @@ public class Bakery implements Constrained, Comparable<Constrained>{
 
 	public double forced(double t_curr){
 		if (this.isFinished()) return 0;
-		return (this.agility(t_curr) > 1) ? 0 : Math.min(p_max, e_max - e_curr);
+		return (this.agility(t_curr) > 1) ? 0 : p_max;
 	}
 	
 	public double getAgility(){
@@ -62,5 +67,8 @@ public class Bakery implements Constrained, Comparable<Constrained>{
 	public int compareTo(Constrained c){
 		if(ag_factor - c.getAgility() > 0) return 1;
 		else return -1;
+	}
+	public double getPower(){
+		return p_max;
 	}
 }

@@ -8,11 +8,11 @@ public class Simulator{
 	public static final int numBattery = 40;
 	public static final int numBucket = 40;
 
-	public static final int power_mean = 10;
-	public static final int power_sdev = 2;
+	public static final int power_mean = 1200;
+	public static final int power_sdev = 120;
 	
 	public static final double cust_p_range = 10;
-	public static final double cust_sdev = 2;
+	public static final double cust_sdev = 1;
 
 	public static double forced(Constrained[] cust, int num_cust, double time){
 		double ret = 0;
@@ -24,7 +24,9 @@ public class Simulator{
 	
 	public static void forced_dispatch(Constrained[] cust, int num_cust, double time){
 		for(int i = 0; i < num_cust; i++){
-			cust[i].consume(cust[i].forced(time));
+			double tmp = cust[i].forced(time);
+			if(tmp > 0) cust[i].consume(tmp);
+			else break;
 		}
 	}
 	public static double reserve(Bucket[] buckets){
@@ -40,20 +42,18 @@ public class Simulator{
 		for(int i = 0; i < K; i++){
 			//how much power to dispatch
 			double dispatch = p.produce();
+			double dispatched = 0;
 			
 			//how much power are you forced, by the constraints, to 
 			//dispatch to bakeries / batteries
 			double battery_f = forced(batteries, numBattery, i);
 			double bakery_f = forced(bakeries, numBakery, i);
 			double forced = battery_f + bakery_f;
-			
-			double bakery_d = 0;
-			double battery_d = 0;
+
 			if (forced > dispatch){
 				forced_dispatch(batteries, numBattery, i);
 				forced_dispatch(bakeries, numBakery, i);
-				bakery_d = bakery_f;
-				battery_d = battery_f;
+				dispatched = bakery_f + battery_f;
 			}
 			else {
 				//created a combined list of batteries / bakeries
@@ -72,26 +72,57 @@ public class Simulator{
 				//distribute dispatch to the list until can't fulfill the next
 				//request.  Do the book keeping on amount actually dispatched
 				//to each category
+				double d = dispatch;
+				j = 0;
+				double cur = combined[j].getPower();
+				while(d > cur){
+					combined[j++].consume(cur);
+					dispatched += cur;
+					d -= cur;
+					if(j < numBattery + numBakery)
+						cur = combined[j].getPower();
+					else
+						break;
+				}
 				
 			}
-			double bucket_d = Math.min(reserve(buckets), dispatch - bakery_d - battery_d);
+			double bucket_d = Math.min(reserve(buckets), dispatch - dispatched);
 			
 			//sort buckets by agility 
+			Arrays.sort(buckets);
 			
 			//dispatch bucket_d to the buckets
-			
-			imbalance += dispatch - bucket_d - battery_d - bakery_d;
+			double tmp = bucket_d;
+			int j = 0;
+			double cur;
+			if(tmp > 0) {
+				cur = buckets[j].getMaxPositiveConsume();
+				while(tmp > 0 && cur > 0){
+					buckets[j++].consume(cur);
+					tmp -= cur;
+					cur = buckets[j].getMaxPositiveConsume();
+				}
+			}
+			else if(tmp < 0){
+				cur = buckets[j].getMaxNegativeConsume();
+				while(tmp < 0 && cur < 0){
+					buckets[j++].consume(cur);
+					tmp -= cur;
+					cur = buckets[j].getMaxNegativeConsume();
+				}				
+			}
+			imbalance += dispatch - dispatched - bucket_d;
 		}
 		return imbalance;
 	}
 	
 	public static void main(String[] args){
-		if(args.length != 2){
+		if(args.length != 1){
 			System.out.println("Error - must specify a simulation length");
 			System.exit(1);
 		}
 
-		int K = Integer.parseInt(args[1]);
+		int K = Integer.parseInt(args[0]);
 		int Customers = numBakery + numBattery + numBucket;
 
 		//Constraints on customers power demand: want on average
@@ -115,7 +146,10 @@ public class Simulator{
 		/* Require E / P < K so can finish running in simulation duration 
 		 * Fix E, K solve for min P, choose it randomly in [min, min+cust_p_range]*/
 		for(int i = 0; i < numBakery; i++){
-			double e_req = r.nextGaussian()*sdev_e + mean_e;
+			double e_req = 0;
+			while (e_req <= 0){
+				e_req = r.nextGaussian()*sdev_e + mean_e;
+			}
 			double min_p = e_req / K;
 			double pow = r.nextDouble()*cust_p_range + min_p;
 			int end_t = r.nextInt(K);
@@ -124,7 +158,10 @@ public class Simulator{
 		}
 		//batteries are bakeries - the constant power constraint
 		for(int i = 0; i < numBattery; i++){
-			double e_req = r.nextGaussian()*sdev_e + mean_e;
+			double e_req = 0;
+			while(e_req <= 0){
+				e_req = r.nextGaussian()*sdev_e + mean_e;
+			}
 			double min_p = e_req / K;
 			double pow = r.nextDouble()*cust_p_range + min_p;
 			int end_t = r.nextInt(K);
@@ -132,7 +169,10 @@ public class Simulator{
 			batteries[i] = new Battery(e_req, pow, end_t);	
 		}
 		for(int i = 0; i < numBucket; i++){
-			double e_req = r.nextGaussian()*sdev_e + mean_e;
+			double e_req = 0;
+			while(e_req <= 0){
+				e_req = r.nextGaussian()*sdev_e + mean_e;
+			}
 			double min_p = e_req / K;
 			double pow = r.nextDouble()*cust_p_range + min_p;
 			
@@ -143,6 +183,6 @@ public class Simulator{
 		Plant p = new Plant(power_mean, power_sdev);
 		
 		double result = simulate(buckets, batteries, bakeries, p, K);
-		System.out.printf("%f\n", result);
+		System.out.printf("Result: %f\n", result);
 	}
 }

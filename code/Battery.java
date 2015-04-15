@@ -8,10 +8,15 @@ public class Battery implements Constrained, Comparable<Constrained>{
 	private double ag_factor;
 
 	public Battery(double e_max, double p_max, double t_done){
+		if(e_max < 0 || p_max < 0 || t_done < 0){
+			System.out.println("illegal arguments to a new battery");
+			System.exit(1);
+		}
 		this.e_max = e_max;
 		this.p_max = p_max;
 		this.t_done = t_done;
 
+		ag_factor = 0;
 		e_curr = 0;
 	}
 
@@ -42,5 +47,9 @@ public class Battery implements Constrained, Comparable<Constrained>{
 	public int compareTo(Constrained c){
 		if(ag_factor - c.getAgility() > 0) return 1;
 		else return -1;
+	}
+	
+	public double getPower(){
+		return p_max;
 	}
 }
