@@ -4,12 +4,12 @@ import java.util.Arrays;
 
 public class Simulator{
 
-	public static final int numBakery = 40;
-	public static final int numBattery = 40;
-	public static final int numBucket = 10;
+	public static final int numBakery = 50;
+	public static final int numBattery = 50;
+	public static final int numBucket = 50;
 
-	public static final int power_mean = 1200;    //absolute mean for power plant
-	public static final int power_sdev = 120;     //absolute sdev for power plant
+	public static final int power_mean = 100;    //absolute mean for power plant
+	public static final int power_sdev = 10;     //absolute sdev for power plant
 	
 	public static final double cust_p_range = 10; //how big a range for power consume in one time step
 	public static final double cust_sdev = .6;    //percentage of mean
@@ -50,6 +50,8 @@ public class Simulator{
 			double bakery_f = forced(bakeries, numBakery, i);
 			double forced = battery_f + bakery_f;
 
+			System.out.printf("Forced: %f\n", forced);
+			
 			if (forced > dispatch){
 				forced_dispatch(batteries, numBattery, i);
 				forced_dispatch(bakeries, numBakery, i);
@@ -66,9 +68,9 @@ public class Simulator{
 					combined[j] = batteries[k];
 				}
 				
-				//sort by agility
+				//sort by agility (increasing order)
 				Arrays.sort(combined);
-				
+								
 				//distribute dispatch to the list until can't fulfill the next
 				//request.  Do the book keeping on amount actually dispatched
 				//to each category
@@ -88,8 +90,11 @@ public class Simulator{
 			}
 			double bucket_d = Math.min(reserve(buckets), dispatch - dispatched);
 			
-			//sort buckets by agility 
+			//sort buckets by agility (decreasing order)
 			Arrays.sort(buckets);
+//			for(int j = 0; j < numBucket; j++){
+//				System.out.printf("%f\n", buckets[j].getAgility());
+//			}
 			
 			//dispatch bucket_d to the buckets
 			double tmp = bucket_d;
@@ -126,7 +131,7 @@ public class Simulator{
 					bucket_actual += tmp;
 				}
 			}
-			System.out.printf("dispatch: %f\tdispatched: %f\tbucket: %f\n", dispatch, dispatched, bucket_actual);
+			System.out.printf("dispatch: %f\tdispatched: %f\tbucket: %f\n\n", dispatch, dispatched, bucket_actual);
 			imbalance += dispatch - dispatched - bucket_actual;
 		}
 		return imbalance;
@@ -168,8 +173,9 @@ public class Simulator{
 			}
 			double min_p = e_req / K;
 			double pow = r.nextDouble()*cust_p_range + min_p;
-			int end_t = r.nextInt(K);
+			int end_t = r.nextInt(K/2);
 			
+			//System.out.printf("bakery %d: time: %d\n" , i, end_t);
 			bakeries[i] = new Bakery(e_req, pow, end_t);
 		}
 		//batteries are bakeries - the constant power constraint
@@ -180,7 +186,7 @@ public class Simulator{
 			}
 			double min_p = e_req / K;
 			double pow = r.nextDouble()*cust_p_range + min_p;
-			int end_t = r.nextInt(K);
+			int end_t = r.nextInt(K/2);
 			
 			batteries[i] = new Battery(e_req, pow, end_t);	
 		}
