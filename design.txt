@@ -1,0 +1,55 @@
+This document contains major design decisions and outstanding issues for the code.  To be used as a reference 
+when writing the implementation section of the paper.
+
+Plant.java:
+
+The plant class simulates the aggregate production of all plants in the grid.  We are assuming that this 
+follows a gaussian distribution in aggregate (ie sufficiently many small sources).
+
+Constructor:  Takes two arguments.  The absolute value of both the mean and the stddev for the gaussian
+distribution of the plant.
+
+produce:  returns the next random number, per the distribution established by the constructor.
+
+--------
+
+Bucket.java
+
+Buckets have 4 values: an upper and lower threshold for the amount of power they can consume in a time step (ie
+   take in or give back to the grid) and and upper and lower value for the amount of energy they can store.
+
+the agility and reserve functions return the metrics defined in the load taxonomy paper.
+
+Consume does some sanity checking on bounds, and then updates the current energy state.
+
+----------
+
+Constrained.java
+
+This is an interface that both bakeries and batteries implement, which allows them to be treated 
+as equivalent for some of the calculations (ie forced amount of power to distribute, or determining
+who gets how much power if none is forced).
+
+----------
+
+Battery.java
+
+Batteries have a maximum amount of energy that they require, and a maximum amount of power that they can 
+consume in a given time step.
+
+agility and forced implement the requried calculations from the taxonomy paper.
+
+
+--------
+
+Bakery.java
+
+Bakeries have an amount of energy that they requrie, as well an amount of power they require each time step
+while running.  They also have to be run continuously, and have an end time that they must finish by.
+
+includes agility() and forced() methods per the taxonomy paper, and some other bookkeeping ones that are
+useful for enforcing the constraint.  
+
+--------
+
+
