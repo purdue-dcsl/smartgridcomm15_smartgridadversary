@@ -52,4 +52,17 @@ useful for enforcing the constraint.
 
 --------
 
+Simulator.java
 
+The big kahuna.  Several knobs that we can tune with are global variables:
+
+The number of bakeries, batteries, and buckets.
+The mean and stddev for the virtual power plant
+How big the stddev of customers energy requirements are, as a percentage of the mean.
+How much the max power a customer can consume in a given time step varies.
+
+The simulation run time is the only command line argument.  This seemed likely to change more often, so I 
+pulled it out of the source proper.
+
+The next point is how to pick the required power / energy numbers for the customers.  I calculate the total
+energy that they plant will produce on average: ie runtime * the mean of the power plant.
