@@ -65,4 +65,27 @@ The simulation run time is the only command line argument.  This seemed likely t
 pulled it out of the source proper.
 
 The next point is how to pick the required power / energy numbers for the customers.  I calculate the total
-energy that they plant will produce on average: ie runtime * the mean of the power plant.
+energy that they plant will produce on average: ie runtime * the mean of the
+power plant.  I then divide this by the number of customers, and use that as
+the mean energy required for each customer.  The actual energy required by a
+given customer comes from a Normal Distribution with the calculated mean, and
+the tunable standard deviation (knob is stddev as percentage of the mean).  
+
+The next step is to create all the customers.  The energy required is as
+described above.  I next calculate the minimum amount of power the bakery must
+be able to consume to be able to finish during the alloted simulation time
+(ie. required energy / Time).  The amount of power the bakery can actually
+consume per time step is uniform over the range [min, min + range].  Range is
+a hard coded knob currently, it may need to become more flexible.  My end time 
+is currently uniform over the range of possible times, but that doesn't make 
+since.  Needs to be based on the range of plausible end times (ie, what is the
+earliest it could finish to the end).
+
+Batteries are the same as bakeries in terms of power / energy constraint.
+
+Buckets requried energy is calculated the same way, as is the amount of power
+they can give / receive in a time interval.  They can go negative on energy
+though, I chose 0 - max_e as the lower bound.
+
+The rest of the code implements the reference (in the taxonomy paper)
+scheduling algorithm.

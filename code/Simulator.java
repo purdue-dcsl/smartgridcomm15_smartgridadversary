@@ -173,7 +173,7 @@ public class Simulator{
 			}
 			double min_p = e_req / K;
 			double pow = r.nextDouble()*cust_p_range + min_p;
-			int end_t = r.nextInt(K/2);
+			int end_t = r.nextInt(K);
 			
 			//System.out.printf("bakery %d: time: %d\n" , i, end_t);
 			bakeries[i] = new Bakery(e_req, pow, end_t);
