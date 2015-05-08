@@ -21,7 +21,7 @@
 \maketitle
 
 \begin{abstract}
-Abstract goes here, especially once I get this in a better / more rigorous format.  Bare bones for now.
+One of the key benefits of the smart grid is the ability to integrate new power sources, most notably renewables.  However, these sources produces variable amounts of power, which makes fulfilling consumer demands challenging.  To offset this however, the smart grid will allow consumers to add flexibility to their demands.  This added flexibility will let the utility smooth demand and reduce peak demand by rescheduling flexible consumers to off peak times.  All of this will rely on the cyber component of the smart grid, which means that it is susceptible to malicious manipulation.  This paper examines a system with variable power supply and flexible consumer demand in the face of a limited, strategic adversary.  We find that ....
 \end{abstract}
 
 \section{Introduction}
@@ -37,60 +37,49 @@ demand during peak usage (and thus peak price) hours where possible.  This will 
 and make the grid more predictable.
 
 In the smart grid, consumers will communicate their power demands and constraints to the utility, who will then schedule
-power dispatch to them accordingly.  The crucial insight here is that some power consumption, such as running the dishwasher
-or charging an electric vehicle, is flexible as long as it is completed by a certain time.  Other power consumption, such as
-running the AC in the summer is not flexible.  In total though, this will give the utility more flexibility in dispatching power,
-and will smooth demand.
+power dispatch to them accordingly.  The crucial insight here is that some power consumption, such as running the dishwasher or charging an electric vehicle, is flexible as long as it is completed by a certain time.  Other power consumption, such as running the AC in the summer is not flexible.  In total though, this will give the utility more flexibility in dispatching power, and will smooth demand.
 
-Offsetting the demand smoothing from increased consumer flexibility will be increased variation in power supply.  More and
-more power will come from distributed and unpredictable sources: renewables such as wind and solar.  These power supplies
-may flucuate during the day, and the level of power available from them at any given point is not knowable in advance.
+Offsetting the demand smoothing from increased consumer flexibility will be increased variation in power supply.  More and more power will come from distributed and unpredictable sources: renewables such as wind and solar.  These power supplies may flucuate during the day, and the level of power available from them at any given point is not knowable in advance.
 
 This creates a coordination and scheduling problem for the utility.  The utilities goal is to use all available power at any
 given time, constrained by the need to meet consumer's demands.  If the utility faces a short fall, it has to turn to more 
 expensive standby power sources to make up the difference.  Any power that the utility cannot dispatch is wasted.
 
-This scheduling problem is not the only difficulty facing the utility though.  Information about consumer power demands and 
-constraints as well as the amount of power being produced flows over a communications network, and it is tautological that 
-any communications network can and will be attacked.  We propose a malicious strategic adversary with strong abilities, whose
-goal is to destabilize the grid while remaining undetected. 
+This scheduling problem is not the only difficulty facing the utility though.  Information about consumer power demands and constraints as well as the amount of power being produced flows over a communications network, and it is tautological that any communications network can and will be attacked.  We propose a malicious strategic adversary with strong abilities, whose goal is to destabilize the grid while remaining undetected. 
 
-TODO: Finish overview of our paper and results.  Add citations.  This introduction may well serve as the related works 
-section if need be.
+TODO: Finish overview of our paper and results.  Add citations
+
+\section{Related Work}
+
+We build on the model for flexible consumer demand presented by Petersen et al \cite{petersen2013taxonomy}.  There are three classes of consumers: Buckets, Batteries, and Bakeries.  Buckets can both accept power from the grid, or push power back into the grid, and so are the most flexible class of consumer.  Batteries must be charged to a certain level by given time, but do not need power constantly while charging (think of an Electric Vehicle: it needs to be charged by the next morning but it does not need to charge constantly).  Bakeries are the most constrained class of customer: adding a requirement for constant charging to the Battery constraints.
+
+Other prior works have looked at attacks made possible by the introduction of the smart grid, but they do not consider consumer diversity.  Chen et al \cite{chen2015detection} present a scheme for detecting false data injection attacks through deviations in spatial / temporal relationships of data.  Lin et al \cite{lin2012false} examine the effects of false data injection on routing power in the smart grid.  Yuan et al \cite{yuan2011modeling} examine similar attacks against the smart grid, and provide a set of equations that show how much and where an attacker can alter the load in the system while still remaining undetected.  Sridhar et al \cite{sridhar2014model} present a model-based attack detection scheme that focuses on modulating the frequency of the grid in the face of false data injections.  Teixeira et al \cite{teixeira2014security} provide a game theoretic model of a stealthy attacker who can alter line voltage readings, and present strategies for altering the configuration of substations to limit the set of stealthy attacks.  
+
+Other classes of attacks have been examined in the literature, agian without considering consumer diversity.  The DETER testbed has been used to examine the effects of DDoS attacks against smart grids \cite{hussain2012ncs}.  Gupta et al \cite{gupta2010optimal} presented a limited, strategic adversary who could jam a certain number of communications channels, and presented optimal strategies for such an adversasry.  
+
+Prior work has also considered how best to model risks introduced by the cyber component of smart grids.  Ten et al \cite{ten2010cybersecurity} present a survey of existing work on the security of smart grids at the time, and present a risk assessment framework.  Kundur et al \cite{kundur2010towards} show a methodology for modeling the grid and its interdependencies as a graph, which allows automated impact analysis.  In our prior work, we presented a tool for risk assessment of advanced metering infastructure \cite{shawly2014risk}.
 
 \section{Model}
 
-\subsection{Producer}
+We examine the smart grid over the course of a given day, divided into hour long time steps.  In this section we layout the basics components of the grid, how we model them, and how they interact.  In the next section we introduce the adversary.  Our model has three components: Power Generation, Consumers, and the Utility.  Each of these components is characterized by their behaviors, goals, and constraints.  Additionally, our model for how they communicate is presented in this section.  
 
-We focus on renewable energy sources, which provide a fluctuating amount of power.  Each sources produces a uniform random 
-amount of power in a given interval.  This amount of production is bounded by the minimum for the source and its maximum
-production capacity.
+\subsection{Power Generation}
 
-TODO: Is this the right way to go here?
+We primarily consider power generated by renewable sources such as wind and solar.  These sources have a high degree of individual variation.  However, we assume that there are sufficient sources from a wide enough geographic area that in aggregate they produce a normally distributed amount of power.  We also include a fossil fuel plant that is capable of making up any short fall in production for a given time period.  The renewable sources provide their power to the utility continuously, however the fossil fuel backup is only used when needed.
 
 \subsection{Consumer}
 
-We model three different types of consumers, classified based on the flexibility of their demand.  These classes are the same as 
-in \cite{petersen2013taxonomy}.
+We model three different types of consumers, classified based on the flexibility of their demand.  These classes are the same as in \cite{petersen2013taxonomy}.  These consumers are primarily categorized based on the flexibility of their power demand.  Consumers have a maximum amount of power that they can accept in a given time step, as well as a maximum amount of energy demanded (the sum of all the power they receive).
 
-The first and most flexible class is buckets.  Buckets are modeled after (... check the citation).  As such, they can store
-power up to their maximum capacity.  Buckets also consume power, and have a minimum floor that they cannot fall beneath.
+The first and most flexible class is buckets.  Buckets are conceptually a heat sink, or other store of power that can also be tapped.  They are modelled as starting empty, and have both a positive and negative constraint on the amount of power they can accept from or provide to the grid.  As such, they can provide a reserve against production shortfalls, or a place to store excess production for the future.
 
-The second class are batteries.  Batteries have to be charged (receive a given amount of power) by a fixed end point.  However,
-they do not have to charge continuously, and do not loose power when not being charged.
+The second class is batteries.  A good example of this class is an electric vehicle that has been plugged in to charge overnight.  As long as it has received a full charge by morning, you don't care when it charges.  Further, it does not have to be charged continuously.  More formally, a battery can only receive power from the grid, and is contrained by an amount of energy required, and a time by which that energy is required.
 
-The least flexible class are bakeries.  Like batteries, bakeries must receive a given amount of power, unlike batteries they
-must receive power continuously.  Intutitively, think of baking bread.  The over must remain on continuously for the bread
-to be properly baked (ie edible).
-
-TODO: Give the equations, or maybe just say they are in the reference?
+The final and least flexible class are bakeries.  Taking the obvious example: a bakery must produce bread by a certain time.  Bread must be baked for a certain amount of time, and furthermore must be baked continuously.  This means that like batteries bakeries face time and total energy constraints, but add an additional constraint in that once they are started they must received power every time step until they have completed their job.
 
 \subsection{Utility}
 
-The utility's goal is to dispatch all power generated in a given time period.  Each megawatt of power wasted incurs a penalty,
-ad does each megawatt of power that has to be used from standby sources.
-
-TODO: Should these penalties be weighted?  I'm inclined to say that standby should have a larger penalty: perhaps 2x.
+The utility has two inputs: the amount of power generated by the renewable sources, and the demands from the consumers.  The utility has no forward knowledge of how much power will be produced in the future.  In contrast, we assume that all consumer demands are known to the utility.  
 
 \section{Game}
 
@@ -180,9 +169,6 @@ capability (ie how many customers / producers the attacker was able to effect).
 
 TODO: Perhaps we should show with / without proposed defenses.
 
-\section{Related Work}
-
-TODO: I have the notes to write this up.  Mainly waiting until I am on my laptop with Bibtex, or can get it installed at school.
 
 \section{Conclusions}
 

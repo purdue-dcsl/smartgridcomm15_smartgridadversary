@@ -3,7 +3,7 @@ Energy Routing in Smart Grid
 
 Looks at attacks against distributed energy routing using false data injection.
 They assume a static topology, know to each node.
-Suply nodes, demand nodes, communication links, and energy links.
+Supply nodes, demand nodes, communication links, and energy links.
 Try to satisfy everyone while minimizing cost of transmission.
 Increase demand, decrease supply, and futz with topology as attacks.
 Analyze effects formally and through simulation.  Show increased costs and potential outages.
