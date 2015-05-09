@@ -7,6 +7,7 @@
 \usepackage{url}
 \usepackage{hyperref}
 \usepackage{epstopdf}
+\usepackage{xcolor}
 
 \hyphenation{op-tical net-works semi-conduc-tor}
 
@@ -25,30 +26,35 @@ One of the key benefits of the smart grid is the ability to integrate new power 
 
 \end{abstract}
 
+% SB (5/9/15): Editorial comment. Use a single space after a period - thus ``impact. This is'' rather than ``impact.  This is''.
+
 \section{Introduction}
 \label{Introduction}
 
 It is trite but true that the power grid underlies most of modern civilization.  Traditionally the power grid has had a 
 few fixed producers that sell power to utilities, who in turn distribute it to their customers.  Traditionally these 
-customers have not coordinated with the utility, but simply bought whatever power they need at the prevailing price.  
+customers have not coordinated with the utility, but simply bought whatever power they needed at the prevailing price.  
 Similarily, utilities have simply ensured that they have enough power to meet their customer's demands.  
+With the advent of the smart grid, this picture is giving way to dynamic supply and dynamic demand, incentivized in part by dynamic changes in price of energy.  Renewables like wind and solar will enter the supply side of the equation in greater numbers and will contribute to the variation in available supply, in somewhat unpredictable manner. Increased connectivity through the smart grid will allow consumers (and more specifically, the smart appliances) to be 
+aware of the prevailing price of energy and calibrate its usage accordingly. 
 
-The future will be very different.  More producers will enter the grid as renewables like wind and solar become more
-prevalent.  Increased connectivity through the Smart Grid will allow consumers to be price sensitive, and put off 
-demand during peak usage (and thus peak price) hours where possible.  This will smooth the demand curve that utilities face,
-and make the grid more predictable.
+In the smart grid, consumers can also communicate their power demands and constraints to the utility, who can then schedule
+power dispatch to them accordingly.  For example, if the communicated demand over the next time window (15 minutes out, one hour out, etc.) exceeds the anticipated supply, the utility may decide to fire up an expensive generator using fossil fuel. One crucial observation enabling this kind of dynamic demand-supply negotiation is that some demand loads are flexible (``elastic'' in economic-speak) in that they can be scheduled to run at any time within a time window. For example, running the dishwasher or charging an electric vehicle is flexible as long as it is completed by a certain time. Other kinds of loads, such as running the AC in the summer, are not flexible. In aggregate though, the presence of elastic loads will enable consumers to indicate flexible usage periods to the utility, and the utility to schedule its various sources of electricity in a price-optimal manner. This beneficial aspect of the smart grid has been expressed in many publications and even mainstream books (such as, Thomas Friedman's ``Hot, Flat, and Crowded'' from 2009). The scheduling problem for the utility has been investigated in many publications, many of which provide a theoretically rigorous treatment of the problem [XXX]. 
 
-In the smart grid, consumers will communicate their power demands and constraints to the utility, who will then schedule
-power dispatch to them accordingly.  The crucial insight here is that some power consumption, such as running the dishwasher or charging an electric vehicle, is flexible as long as it is completed by a certain time.  Other power consumption, such as running the AC in the summer is not flexible.  In total though, this will give the utility more flexibility in dispatching power, and will smooth demand.
-
-Offsetting the demand smoothing from increased consumer flexibility will be increased variation in power supply.  More and more power will come from distributed and unpredictable sources: renewables such as wind and solar.  These power supplies may flucuate during the day, and the level of power available from them at any given point is not knowable in advance.
+% Offsetting the demand smoothing from increased consumer flexibility will be increased variation in power supply. More and more power will come from distributed and unpredictable sources: renewables such as wind and solar. These power supplies may flucuate during the day, and the level of power available from them at any given point is not knowable in advance.
 % SB (5/8/15): There is repeat of this material. 
 
-This creates a coordination and scheduling problem for the utility.  The utilities goal is to use all available power at any
-given time, constrained by the need to meet consumer's demands.  If the utility faces a short fall, it has to turn to more 
-expensive standby power sources to make up the difference.  Any power that the utility cannot dispatch is wasted.
+However, no prior work has investigated the impact of security attacks on such scheduling. Security attacks in the smart grid are widely anticipated [XXX] and many demonstrations have been done in laboratory settings [XXX]. It is till now unknown how security attacks --- jamming, false data injection, and delays in the communication channel --- affect the scheduling problem. The ultimate possible impact could be in the form of brownouts or blackouts and in our evaluation, we bring this out in the form of instantaneous mismatches between the demand the supply. A mismatch is undesriable in both directions --- if the demand is larger, this may lead to brownouts or blackouts, and if the supply is larger, then this may mean that the utility had to use more expensive sources of energy to fill a perceived (but ultimately incorrect) demand. The attacks could result in these impacts by disrupting the communication of the actual demand. Due to the interconnected nature of the smart grid, there are many possible entry points for such attacks --- the smart meters, the connection of these to the neighborhood data collection unit (DCU), the connection between the DCU and the control station at the local sub-station, etc. In addition to demonstrating the effect of such attacks, we take well-known security controls and evaluate how using them in our smart grid setting will mitigate the effects of some of these attacks. For example, we show that transient denial of service can be sucessfully ``fought through'' by using historical data of demand, even when the demand is somewhat fluctuating from day-to-day, provided a good characterization of the elasticity of the loads can be done. 
 
-This scheduling problem is not the only difficulty facing the utility though.  Information about consumer power demands and constraints as well as the amount of power being produced flows over a communications network, and it is tautological that any communications network can and will be attacked.  We propose a malicious strategic adversary with strong abilities, whose goal is to destabilize the grid while remaining undetected. 
+We build a discrete event simulator with two actors --- a strategic adversary and a defender (can be taken to model a utility). The adversary has a budget for the attack, in terms of the number of assets she can simultaneously target, and performs a game-theoretic determination of which assets to target subject to the budget constraint. The defender also performs a game-theoretic determination of which assets to make more secure against the above types of attacks. The discrete event simulation can model various intensities of attacks, different characteristics of loads, and different budgets for the adversary and the defender. For each configuration, it can provide the mismatch metric without any attack, with the attack and without any defense, and with the attack and with the defense controls in place. 
+\textcolor{red} {Give 1-2 main results here.}
+We have released our simulator as an open source project, along with our simulation datasets at \textcolor{red}{Give URL}. 
+
+% This creates a coordination and scheduling problem for the utility. The utilities goal is to use all available power at any
+% % given time, constrained by the need to meet consumer's demands. If the utility faces a short fall, it has to turn to more 
+% expensive standby power sources to make up the difference. Any power that the utility cannot dispatch is wasted.
+
+% This scheduling problem is not the only difficulty facing the utility though. Information about consumer power demands and constraints as well as the amount of power being produced flows over a communications network, and it is tautological that any communications network can and will be attacked. We propose a malicious strategic adversary with strong abilities, whose goal is to destabilize the grid while remaining undetected. 
 % SB (5/8/15): Point to some real deployment like this and some real instance of attack. 
 % Nobody has shown how damaging an attack can be in such environments. We show that and show how relatively simple defense mechanisms based on prior work can mitigate these attacks. 
 % Explain what destabilization means. 
@@ -57,96 +63,96 @@ This scheduling problem is not the only difficulty facing the utility though.  I
 % Our simulation is a discrete event simulator which we open source.
 % Key takeaways
 
-TODO: Finish overview of our paper and results.  Add citations
+TODO: Finish overview of our paper and results. Add citations
 
 \section{Related Work}
 \label{Related Work}
 
-We build on the model for flexible consumer demand presented by Petersen et al \cite{petersen2013taxonomy}.  There are three classes of consumers: Buckets, Batteries, and Bakeries.  Buckets can both accept power from the grid, or push power back into the grid, and so are the most flexible class of consumer.  Batteries must be charged to a certain level by given time, but do not need power constantly while charging (think of an Electric Vehicle: it needs to be charged by the next morning but it does not need to charge constantly).  Bakeries are the most constrained class of customer: adding a requirement for constant charging to the Battery constraints.
+We build on the model for flexible consumer demand presented by Petersen et al \cite{petersen2013taxonomy}. There are three classes of consumers: Buckets, Batteries, and Bakeries. Buckets can both accept power from the grid, or push power back into the grid, and so are the most flexible class of consumer. Batteries must be charged to a certain level by given time, but do not need power constantly while charging (think of an Electric Vehicle: it needs to be charged by the next morning but it does not need to charge constantly). Bakeries are the most constrained class of customer: adding a requirement for constant charging to the Battery constraints.
 
-Other prior works have looked at attacks made possible by the introduction of the smart grid, but they do not consider consumer diversity.  Chen et al \cite{chen2015detection} present a scheme for detecting false data injection attacks through deviations in spatial / temporal relationships of data.  Lin et al \cite{lin2012false} examine the effects of false data injection on routing power in the smart grid.  Yuan et al \cite{yuan2011modeling} examine similar attacks against the smart grid, and provide a set of equations that show how much and where an attacker can alter the load in the system while still remaining undetected.  Sridhar et al \cite{sridhar2014model} present a model-based attack detection scheme that focuses on modulating the frequency of the grid in the face of false data injections.  Teixeira et al \cite{teixeira2014security} provide a game theoretic model of a stealthy attacker who can alter line voltage readings, and present strategies for altering the configuration of substations to limit the set of stealthy attacks.  
+Other prior works have looked at attacks made possible by the introduction of the smart grid, but they do not consider consumer diversity. Chen et al \cite{chen2015detection} present a scheme for detecting false data injection attacks through deviations in spatial / temporal relationships of data. Lin et al \cite{lin2012false} examine the effects of false data injection on routing power in the smart grid. Yuan et al \cite{yuan2011modeling} examine similar attacks against the smart grid, and provide a set of equations that show how much and where an attacker can alter the load in the system while still remaining undetected. Sridhar et al \cite{sridhar2014model} present a model-based attack detection scheme that focuses on modulating the frequency of the grid in the face of false data injections. Teixeira et al \cite{teixeira2014security} provide a game theoretic model of a stealthy attacker who can alter line voltage readings, and present strategies for altering the configuration of substations to limit the set of stealthy attacks. 
 
-Other classes of attacks have been examined in the literature, agian without considering consumer diversity.  The DETER testbed has been used to examine the effects of DDoS attacks against smart grids \cite{hussain2012ncs}.  Gupta et al \cite{gupta2010optimal} presented a limited, strategic adversary who could jam a certain number of communications channels, and presented optimal strategies for such an adversasry.  
+Other classes of attacks have been examined in the literature, agian without considering consumer diversity. The DETER testbed has been used to examine the effects of DDoS attacks against smart grids \cite{hussain2012ncs}. Gupta et al \cite{gupta2010optimal} presented a limited, strategic adversary who could jam a certain number of communications channels, and presented optimal strategies for such an adversasry. 
 
-Prior work has also considered how best to model risks introduced by the cyber component of smart grids.  Ten et al \cite{ten2010cybersecurity} present a survey of existing work on the security of smart grids at the time, and present a risk assessment framework.  Kundur et al \cite{kundur2010towards} show a methodology for modeling the grid and its interdependencies as a graph, which allows automated impact analysis.  In our prior work, we presented a tool for risk assessment of advanced metering infastructure \cite{shawly2014risk}.
+Prior work has also considered how best to model risks introduced by the cyber component of smart grids. Ten et al \cite{ten2010cybersecurity} present a survey of existing work on the security of smart grids at the time, and present a risk assessment framework. Kundur et al \cite{kundur2010towards} show a methodology for modeling the grid and its interdependencies as a graph, which allows automated impact analysis. In our prior work, we presented a tool for risk assessment of advanced metering infastructure \cite{shawly2014risk}.
 
 \section{Model}
 \label{Model}
 
-We examine the smart grid over the course of a given day, divided into arbitrary time steps.  In this section we lay out the basic components of the grid, how we model them, and how they interact.  In the next section we introduce the adversary.  Our model has three components: Power Generation, Consumers, and the Utility.  Each of these components is characterized by their behaviors, goals, and constraints.  Additionally, our model for how they communicate is presented in this section.  
+We examine the smart grid over the course of a given day, divided into arbitrary time steps. In this section we lay out the basic components of the grid, how we model them, and how they interact. In the next section we introduce the adversary. Our model has three components: Power Generation, Consumers, and the Utility. Each of these components is characterized by their behaviors, goals, and constraints. Additionally, our model for how they communicate is presented in this section. 
 
 \subsection{Power Generation}
 \label{Power Generation}
 
-We primarily consider power generated by renewable sources such as wind and solar.  These sources have a high degree of individual variation.  However, we assume that there are sufficient sources from a wide enough geographic area that in aggregate they produce a normally distributed amount of power.  We also include a fossil fuel plant that is capable of making up any short fall in production for a given time period.  The renewable sources provide their power to the utility continuously, however the fossil fuel backup is only used when needed.
+We primarily consider power generated by renewable sources such as wind and solar. These sources have a high degree of individual variation. However, we assume that there are sufficient sources from a wide enough geographic area that in aggregate they produce a normally distributed amount of power. We also include a fossil fuel plant that is capable of making up any short fall in production for a given time period. The renewable sources provide their power to the utility continuously, however the fossil fuel backup is only used when needed.
 
 \subsection{Consumer}
 \label{Consumer}
 
-We model three different types of consumers, classified based on the flexibility of their demand.  These classes are the same as in \cite{petersen2013taxonomy}.  These consumers are primarily categorized based on the flexibility of their power demand.  Consumers have a maximum amount of power that they can accept in a given time step, as well as a maximum amount of energy demanded (the sum of all the power they receive).
+We model three different types of consumers, classified based on the flexibility of their demand. These classes are the same as in \cite{petersen2013taxonomy}. These consumers are primarily categorized based on the flexibility of their power demand. Consumers have a maximum amount of power that they can accept in a given time step, as well as a maximum amount of energy demanded (the sum of all the power they receive).
 
-The first and most flexible class is buckets.  Buckets are conceptually a heat sink, or other store of power that can also be tapped.  They are modelled as starting empty, and have both a positive and negative constraint on the amount of power they can accept from or provide to the grid.  As such, they can provide a reserve against production shortfalls, or a place to store excess production for the future.
+The first and most flexible class is buckets. Buckets are conceptually a heat sink, or other store of power that can also be tapped. They are modelled as starting empty, and have both a positive and negative constraint on the amount of power they can accept from or provide to the grid. As such, they can provide a reserve against production shortfalls, or a place to store excess production for the future.
 
-The second class is batteries.  A good example of this class is an electric vehicle that has been plugged in to charge overnight.  As long as it has received a full charge by morning, you don't care when it charges.  Further, it does not have to be charged continuously.  More formally, a battery can only receive power from the grid, and is contrained by an amount of energy required, and a time by which that energy is required.
+The second class is batteries. A good example of this class is an electric vehicle that has been plugged in to charge overnight. As long as it has received a full charge by morning, you don't care when it charges. Further, it does not have to be charged continuously. More formally, a battery can only receive power from the grid, and is contrained by an amount of energy required, and a time by which that energy is required.
 
-The final and least flexible class are bakeries.  Taking the obvious example: a bakery must produce bread by a certain time.  Bread must be baked for a certain amount of time, and furthermore must be baked continuously.  This means that like batteries bakeries face time and total energy constraints, but add an additional constraint in that once they are started they must received power every time step until they have completed their job.
+The final and least flexible class are bakeries. Taking the obvious example: a bakery must produce bread by a certain time. Bread must be baked for a certain amount of time, and furthermore must be baked continuously. This means that like batteries bakeries face time and total energy constraints, but add an additional constraint in that once they are started they must received power every time step until they have completed their job.
 
 \subsection{Communication}
 \label{Communication}
 
-Before describing the utility, we first need to outline how the power generators and consumers communicate with the utility.  The power generators communicate the amount of power they are currently producing to the utility at each time step.  However, they have no forward knowledge of how much power they will produce at the next time step, and consequently neither does the utility.  The consumer's communicate each power demand and its constraints to the utility when they create it.  We simplify this by assuming that all jobs are created at the beginning of the day.  However, customers are free to modify the job at any point.
+Before describing the utility, we first need to outline how the power generators and consumers communicate with the utility. The power generators communicate the amount of power they are currently producing to the utility at each time step. However, they have no forward knowledge of how much power they will produce at the next time step, and consequently neither does the utility. The consumer's communicate each power demand and its constraints to the utility when they create it. We simplify this by assuming that all jobs are created at the beginning of the day. However, customers are free to modify the job at any point.
 
 \subsection{Utility}
 \label{Utility}
 
-The utility has two inputs: the amount of power generated by the renewable sources, and the demands from the consumers, which are communiated to it as described in \ref{Communication}.  The utility is required to meet all consumer demands.  However, it is free to reschedule them to the greatest extent possible.  Using this flexibility the utility's goal is simple: to ensure that all power generated is used, and to minimize the amount of power it has to receive from the fossil fuel backup. To do this, the utility uses the Agile Balancing scheduling algorithm in \cite{petersen2013taxonomy}.  This first provides any required power, and then dispatches the rest based on flexibility.
+The utility has two inputs: the amount of power generated by the renewable sources, and the demands from the consumers, which are communiated to it as described in \ref{Communication}. The utility is required to meet all consumer demands. However, it is free to reschedule them to the greatest extent possible. Using this flexibility the utility's goal is simple: to ensure that all power generated is used, and to minimize the amount of power it has to receive from the fossil fuel backup. To do this, the utility uses the Agile Balancing scheduling algorithm in \cite{petersen2013taxonomy}. This first provides any required power, and then dispatches the rest based on flexibility.
 
 \section{Game}
 \label{Game}
 
-This section defines the game between the adversary and the utility.  This is a multistage game, with moves being made at each time step.  We consider several variations on this game, which are differentiated by the adversary model.  In general, the adversary seeks to maximally disrupt the grid by making strategic use of its limited resources to disrupt the grid.  We play the game first with the utility only being allowed to follow its scheduling algorithm on the input it receives.  We then replay the game after the utility has made strategic defensive investments based on the outcome of the first game.  As such the game serves as an impact analysis platform that can guide defensive investments, and show the impact that they have against the adversary.   
+This section defines the game between the adversary and the utility. This is a multistage game, with moves being made at each time step. We consider several variations on this game, which are differentiated by the adversary model. In general, the adversary seeks to maximally disrupt the grid by making strategic use of its limited resources to disrupt the grid. We play the game first with the utility only being allowed to follow its scheduling algorithm on the input it receives. We then replay the game after the utility has made strategic defensive investments based on the outcome of the first game. As such the game serves as an impact analysis platform that can guide defensive investments, and show the impact that they have against the adversary.  
 % SB (5/8/15): Put a table of attack and defense strategies and in that bring out where a game theoretic decision is made by defender.
 % Attacker is picking randomly, but weighted - bakeries are more lucrative to attack and within that, by demand.
 
 \subsection{Operational Rules}
 \label{Rules}
 
-At the beginning of the day, the customer's send their demands to the utility.  These are visible to the adversary, but he cannot modify them in transit (ie they are protected by HMAC or similar), other than by jamming the customer and causing the packet to be lost in transit.    Once the customer messages are received, the adversary can inject any modification messages that he wants, subject to the model in \ref{Adversary}.  At that point the day begins, and the power producers send their production to the utility, who distributes it according to \ref{Utility}.  The power plant and utility continue in this fashion for every time step until the end of the day.  At this point, the total cost that the adversary inflicted
+At the beginning of the day, the customer's send their demands to the utility. These are visible to the adversary, but he cannot modify them in transit (ie they are protected by HMAC or similar), other than by jamming the customer and causing the packet to be lost in transit.   Once the customer messages are received, the adversary can inject any modification messages that he wants, subject to the model in \ref{Adversary}. At that point the day begins, and the power producers send their production to the utility, who distributes it according to \ref{Utility}. The power plant and utility continue in this fashion for every time step until the end of the day. At this point, the total cost that the adversary inflicted
 on the utility is determined.
 
 \subsection{Adversary}
 \label{Adversary}
 
-The adversary's goal is to force the utility to either waste power, or have to pull power from the backup.  Either of these sources of wated power cost the utility money.  This allows us to state the attacker's goal as to maximize the cost of the attack to the utility.  To do this we present the following adversary model.  Note that the idea of jamming \cite{gupta2010optimal}, and false data injection on loads \cite{lin2012false}\cite{yuan2011modeling} are established in the literature, though novel in this context.  The false data injection on time constraints and consumer classification are new extensions on false data injection made possible by the presence of heterogenous customers.
+The adversary's goal is to force the utility to either waste power, or have to pull power from the backup. Either of these sources of wated power cost the utility money. This allows us to state the attacker's goal as to maximize the cost of the attack to the utility. To do this we present the following adversary model. Note that the idea of jamming \cite{gupta2010optimal}, and false data injection on loads \cite{lin2012false}\cite{yuan2011modeling} are established in the literature, though novel in this context. The false data injection on time constraints and consumer classification are new extensions on false data injection made possible by the presence of heterogenous customers.
 
 \begin{itemize}
-\item Jamming. The attacker can jam communication between the utility and producers / consumers.  We model this in terms of the number of customers prevented from communicating with the utility, divorced from any specific topology.  We assume that the attacker can jam 5\%, 10\%, or 15\% of the utility's customers.  This is not a stealthy attack: the utility can tell that the communication channel has been jammed.
+\item Jamming. The attacker can jam communication between the utility and producers / consumers. We model this in terms of the number of customers prevented from communicating with the utility, divorced from any specific topology. We assume that the attacker can jam 5\%, 10\%, or 15\% of the utility's customers. This is not a stealthy attack: the utility can tell that the communication channel has been jammed.
 
-\item False Data Injection - Load. The attacker can modify the communicated demand from consumers / supply from producers.  Here the attacker can remain stealthy.  While the exact amount of noise the attacker can inject depends on a number of factors \cite{yuan2011modeling}, for our purposes - exploring the effect of this attack given heterogenous customers - it is sufficient to assume that the attacker can modify the demand by 5\%, 10\%, or 15\%.  This is a stealthy attack, the utility has no way of knowing that this has been done.
+\item False Data Injection - Load. The attacker can modify the communicated demand from consumers / supply from producers. Here the attacker can remain stealthy. While the exact amount of noise the attacker can inject depends on a number of factors \cite{yuan2011modeling}, for our purposes - exploring the effect of this attack given heterogenous customers - it is sufficient to assume that the attacker can modify the demand by 5\%, 10\%, or 15\%. This is a stealthy attack, the utility has no way of knowing that this has been done.
 
-\item False Data Injection - Modify Time Constraints. Here the attacker can change the consumer's time constraints, ie he can cluster the demands more tightly.  This can signfiicantly decrease the flexibility available to the utility by forcing power to be distributed to many customers at the same time.  We constrain the attacker to only modify the time constraints of 5\%, 10\%, or 15\% of customers, but assume that the utility cannot detect the attack.
+\item False Data Injection - Modify Time Constraints. Here the attacker can change the consumer's time constraints, ie he can cluster the demands more tightly. This can signfiicantly decrease the flexibility available to the utility by forcing power to be distributed to many customers at the same time. We constrain the attacker to only modify the time constraints of 5\%, 10\%, or 15\% of customers, but assume that the utility cannot detect the attack.
 
-\item False Data Injection - Change Customer Class.  Buckets are very useful to the utility in scheduling because they provide
-the most additional flexibility.  The attacker could target them by adding constraints such that the buckets become bakeries.  We constrain the attacker to modifying no more than 5\%, 10\%, or 15\% of the bakeries, but assume that the attacker is stealthy within those constraints.
+\item False Data Injection - Change Customer Class. Buckets are very useful to the utility in scheduling because they provide
+the most additional flexibility. The attacker could target them by adding constraints such that the buckets become bakeries. We constrain the attacker to modifying no more than 5\%, 10\%, or 15\% of the bakeries, but assume that the attacker is stealthy within those constraints.
 
 \end{itemize}
 
 \subsection{Utility}
 \label{Utility2}
 
-The utility's core strategy is to detect and correct for any malicious communications.  This will allow its performance to be
-constrained solely by its scheduling algorithm (out baseline) and not by the attacker.  However, only the jamming attack is detectable by the utility.  Consequently, the best that the utility can do against the other attacks is to make defensive investments.  The utiltiy plays the game against the other types of attack, and then picks a set of defensive investments.  These limit the amount of damage that the attacker can inflict.  As a result of this, the utility can limit and qunatify the maximum amount of damage it is suffering.
+The utility's core strategy is to detect and correct for any malicious communications. This will allow its performance to be
+constrained solely by its scheduling algorithm (out baseline) and not by the attacker. However, only the jamming attack is detectable by the utility. Consequently, the best that the utility can do against the other attacks is to make defensive investments. The utiltiy plays the game against the other types of attack, and then picks a set of defensive investments. These limit the amount of damage that the attacker can inflict. As a result of this, the utility can limit and qunatify the maximum amount of damage it is suffering.
 
 \begin{itemize}
-\item Jamming.  Jamming is always detected.  The utility corrects for this by using historical data.  We examine the effects 
-of the historical data being 5\%, 20\%, or 50\% inaccurate as to load, but assume that the constraints in the historical data are accurate.  That is, if if a customer was a battery before being jammer, a customer is a battery afterwards, and has the same time constraint.
+\item Jamming. Jamming is always detected. The utility corrects for this by using historical data. We examine the effects 
+of the historical data being 5\%, 20\%, or 50\% inaccurate as to load, but assume that the constraints in the historical data are accurate. That is, if if a customer was a battery before being jammer, a customer is a battery afterwards, and has the same time constraint.
 
-\item False Data Injection - All Varieties.  The utility cannot directly defend itself against this attack, because it cannot be detected.  However, the very need to remain stealthy limits the attack.  Additionally, the utility can perform an impact analysis, and defend certain customers against this attack.  This passive defense further limits the amount of damage that the attacker can inflict.  If the utility were to institute a policy that all constraints (load, time, constant power) could only be relaxed (decreased, delayed, removed) then these attacks would become impossible (the attacker could only make the utility's scheduling job easier, not harder).  However, we consider such policies to be too constraining on customers, and unlikely to be deployed.
+\item False Data Injection - All Varieties. The utility cannot directly defend itself against this attack, because it cannot be detected. However, the very need to remain stealthy limits the attack. Additionally, the utility can perform an impact analysis, and defend certain customers against this attack. This passive defense further limits the amount of damage that the attacker can inflict. If the utility were to institute a policy that all constraints (load, time, constant power) could only be relaxed (decreased, delayed, removed) then these attacks would become impossible (the attacker could only make the utility's scheduling job easier, not harder). However, we consider such policies to be too constraining on customers, and unlikely to be deployed.
 % SB (5/8/15): Defense is cryptographically securing a subset of the consumers, with weighting favoring the heavy consumers. 
 
 \end{itemize}
 
-In our game, it is more costly for the utility to use backup power than to waste power.  This reflects the fact that standby power generation for this purpose is more expensive than the production of renewable power.
+In our game, it is more costly for the utility to use backup power than to waste power. This reflects the fact that standby power generation for this purpose is more expensive than the production of renewable power.
 
 TODO: cost function stuff above seems weak
 
@@ -158,8 +164,8 @@ TODO: cost function stuff above seems weak
 \section{Experimental Results}
 \label{Experimental Results}
 
-TODO: Need to show baseline (ie under the previously published scheduling algorithm) vs with attacker results.  Probably
-do figures by attack class, and show the percentage degradation in performance.  Have multiple lines for each level of attacker
+TODO: Need to show baseline (ie under the previously published scheduling algorithm) vs with attacker results. Probably
+do figures by attack class, and show the percentage degradation in performance. Have multiple lines for each level of attacker
 capability (ie how many customers / producers the attacker was able to effect).
 
 TODO: We should show with / without proposed defenses.
