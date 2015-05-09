@@ -70,6 +70,9 @@ public class Adversary {
 					//System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
 					bakeries[i].setE(cur*scale);
 				}
+                else if(type.equals("fdi-time")){
+                    bakeries[i].setTime(bakeries[i].getRun());
+                }
 				/* Other attack types go here */
 			}
 		}
@@ -155,6 +158,9 @@ public class Adversary {
 					//System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
 					bakeries[i].setE(cur*scale);
 				}
+                else if(type.equals("fdi-time")){
+                    bakeries[i].setTime(bakeries[i].getRun());
+                }
 				/* Other attack types go here */
 			}
 		}

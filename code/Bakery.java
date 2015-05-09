@@ -79,4 +79,13 @@ public class Bakery implements Constrained, Comparable<Constrained>{
 		e_max = e;
 		run = Math.ceil(e_max / p_max);
 	}
+    public double getRun(){
+        return run;
+    }
+    public double getTime(){
+        return t_done;
+    }
+    public void setTime(double t){
+        t_done = t;
+    }
 }
