@@ -13,13 +13,15 @@ public class Plant {
 	private Random r;
 
 	/*Using a fixed seed for now for debugging */
-	Plant(int mean, int stddev){
+	Plant(int mean, int stddev, int seed){
 		this.mean = mean;
 		this.stddev = stddev;
-		r = new Random(123456789);
+		r = new Random(seed);
 	}
 
 	public double produce(){
-		return r.nextGaussian()*stddev+mean; 
+		double tmp = r.nextGaussian()*stddev+mean;
+		if (tmp >= 0) return tmp;
+		else return -tmp;
 	}
 }

@@ -8,11 +8,10 @@ public class Simulator{
 	public static final int numBattery = 50;
 	public static final int numBucket = 50;
 
-	public static final int power_mean = 100;    //absolute mean for power plant
+	public static final int power_mean = 10;    //absolute mean for power plant
 	public static final int power_sdev = 10;     //absolute sdev for power plant
 	
-	public static final double cust_p_range = 10; //how big a range for power consume in one time step
-	public static final double cust_sdev = .6;    //percentage of mean
+	public static final double cust_sdev = .3;    //percentage of mean
 
 	public static double forced(Constrained[] cust, int num_cust, double time){
 		double ret = 0;
@@ -50,7 +49,7 @@ public class Simulator{
 			double bakery_f = forced(bakeries, numBakery, i);
 			double forced = battery_f + bakery_f;
 
-			System.out.printf("Forced: %f\n", forced);
+			//System.out.printf("Forced: %f\n", forced);
 			
 			if (forced > dispatch){
 				forced_dispatch(batteries, numBattery, i);
@@ -63,9 +62,11 @@ public class Simulator{
 				int j = 0;
 				for(; j < numBakery; j++){
 					combined[j] = bakeries[j];
+					//System.out.printf("%f\n", combined[j].getAgility());
 				}
 				for(int k = 0; j < numBattery + numBakery; k++, j++){
 					combined[j] = batteries[k];
+					//System.out.printf("%f\n", combined[j].getAgility());
 				}
 				
 				//sort by agility (increasing order)
@@ -89,7 +90,7 @@ public class Simulator{
 				
 			}
 			double bucket_d = Math.min(reserve(buckets), dispatch - dispatched);
-			
+			//System.out.printf("Needed: %f, available: %f\n", dispatch - dispatched, reserve(buckets));
 			//sort buckets by agility (decreasing order)
 			Arrays.sort(buckets);
 //			for(int j = 0; j < numBucket; j++){
@@ -131,38 +132,52 @@ public class Simulator{
 					bucket_actual += tmp;
 				}
 			}
-			System.out.printf("dispatch: %f\tdispatched: %f\tbucket: %f\n\n", dispatch, dispatched, bucket_actual);
+			//System.out.printf("dispatch: %f\tdispatched: %f\tbucket: %f\timbalance: %f\n\n", dispatch, dispatched, bucket_actual, dispatch - dispatched - bucket_actual);
 			imbalance += dispatch - dispatched - bucket_actual;
 		}
+		//System.out.printf("Done\n\n\n");
 		return imbalance;
 	}
 	
 	public static void main(String[] args){
-		if(args.length != 1){
-			System.out.println("Error - must specify a simulation length");
+		if(args.length != 3){
+			System.out.println("Usage: java Simulator <time> <rng seed> <attack_model>");
 			System.exit(1);
 		}
 
 		int K = Integer.parseInt(args[0]);
+		int seed = Integer.parseInt(args[1]);
 		int Customers = numBakery + numBattery + numBucket;
 
 		//Constraints on customers power demand: want on average
 		//to produce as much as consume, so balance is possible 
 		//in theory
 		int total_e = K*power_mean;
+		//System.out.printf("Total energy: %d\n", total_e);
 
-		//Assume customers energy requriements are gaussian in 
+		//Assume customers energy requirements are gaussian in 
 		//aggregate, with this mean and a stddev of 15%
 		double mean_e = total_e / (double) Customers;
 		double sdev_e = mean_e * cust_sdev;
+		//System.out.printf("Mean per customer: %f\n", mean_e);
 
 		//need a random number generator for customer constraints / demands
-		Random r = new Random(987654321);
+		Random r = new Random(seed);
 
 		//Create arrays to hold all our customers
 		Bakery[] bakeries = new Bakery[numBakery];
 		Battery[] batteries = new Battery[numBattery];
 		Bucket[] buckets = new Bucket[numBucket];
+		
+		//copies for the adversary
+		Bakery[] bak = new Bakery[numBakery];
+		Battery[] bat = new Battery[numBattery];
+		Bucket[] buck = new Bucket[numBucket];
+		
+		//copies for the adversary
+		Bakery[] bk = new Bakery[numBakery];
+		Battery[] bt = new Battery[numBattery];
+		Bucket[] buc = new Bucket[numBucket];
 
 		/* Require E / P < K so can finish running in simulation duration 
 		 * Fix E, K solve for min P, choose it randomly in [min, min+cust_p_range]*/
@@ -172,11 +187,18 @@ public class Simulator{
 				e_req = r.nextGaussian()*sdev_e + mean_e;
 			}
 			double min_p = e_req / K;
-			double pow = r.nextDouble()*cust_p_range + min_p;
-			int end_t = r.nextInt(K);
+			double pow = r.nextDouble()*min_p*K + min_p;
+			double earliest = Math.ceil(e_req / pow);
+			int end_t;
+			if(K - (int)earliest > 0)
+				end_t = (int) (earliest + r.nextInt(K - (int)earliest));
+			else
+				end_t = (int)earliest;
 			
-			//System.out.printf("bakery %d: time: %d\n" , i, end_t);
+			//System.out.printf("bakery %d: e_req: %f\tpow: %f\tearliest: %f\ttime: %d\n" , i, e_req, pow, earliest, end_t);
 			bakeries[i] = new Bakery(e_req, pow, end_t);
+			bak[i] = new Bakery(e_req, pow, end_t);
+			bk[i] = new Bakery(e_req, pow, end_t);
 		}
 		//batteries are bakeries - the constant power constraint
 		for(int i = 0; i < numBattery; i++){
@@ -185,10 +207,17 @@ public class Simulator{
 				e_req = r.nextGaussian()*sdev_e + mean_e;
 			}
 			double min_p = e_req / K;
-			double pow = r.nextDouble()*cust_p_range + min_p;
-			int end_t = r.nextInt(K/2);
-			
+			double pow = r.nextDouble()*min_p*K + min_p;
+			double earliest = Math.ceil(e_req / pow);
+			int end_t;
+			if(K - (int)earliest > 0)
+				end_t = (int) (earliest + r.nextInt(K - (int)earliest));
+			else
+				end_t = (int)earliest;
+			//System.out.printf("battery %d: e_req: %f\tpow: %f\tearliest: %f\ttime: %d\n" , i, e_req, pow, earliest, end_t);
 			batteries[i] = new Battery(e_req, pow, end_t);	
+			bat[i] = new Battery(e_req, pow, end_t);
+			bt[i] = new Battery(e_req, pow, end_t);
 		}
 		for(int i = 0; i < numBucket; i++){
 			double e_req = 0;
@@ -196,15 +225,28 @@ public class Simulator{
 				e_req = r.nextGaussian()*sdev_e + mean_e;
 			}
 			double min_p = e_req / K;
-			double pow = r.nextDouble()*cust_p_range + min_p;
+			double pow = r.nextDouble()*min_p*K + min_p;
 			
+			//System.out.printf("bucket %d: max e: %f\tpow: %f\n" , i, e_req, pow);
 			buckets[i] = new Bucket(e_req, -e_req, pow, -pow);
+			buck[i] = new Bucket(e_req, -e_req, pow, -pow);
+			buc[i] = new Bucket(e_req, -e_req, pow, -pow);
 		}
 		
 		//initialize the power plant
-		Plant p = new Plant(power_mean, power_sdev);
+		Plant p = new Plant(power_mean, power_sdev, seed);
 		
-		double result = simulate(buckets, batteries, bakeries, p, K);
-		System.out.printf("Result: %f\n", result);
+		double baseline = simulate(buckets, batteries, bakeries, p, K);
+		
+		Adversary a = new Adversary(args[2], (int)Math.ceil(Customers * .1), seed);
+		a.attack(bak);
+		Plant p2 = new Plant(power_mean, power_sdev, seed);
+		double before = simulate(buck, bat, bak, p2, K);
+		
+		Adversary b = new Adversary(args[2], (int)Math.ceil(Customers * .1), seed);
+		b.attack_defend(bk);
+		Plant p3 = new Plant(power_mean, power_sdev, seed);
+		double after = simulate(buc, bt, bk, p3, K);
+		System.out.printf("%10.2f,%10.2f,%10.2f\n", baseline, before, after);
 	}
 }

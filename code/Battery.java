@@ -46,6 +46,7 @@ public class Battery implements Constrained, Comparable<Constrained>{
 	
 	public int compareTo(Constrained c){
 		if(ag_factor - c.getAgility() > 0) return 1;
+		else if(ag_factor == c.getAgility()) return 0;
 		else return -1;
 	}
 	

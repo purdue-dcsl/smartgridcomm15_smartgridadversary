@@ -66,9 +66,17 @@ public class Bakery implements Constrained, Comparable<Constrained>{
 	
 	public int compareTo(Constrained c){
 		if(ag_factor - c.getAgility() > 0) return 1;
+		else if(ag_factor == c.getAgility()) return 0;
 		else return -1;
 	}
 	public double getPower(){
 		return p_max;
+	}
+	public double getE(){
+		return e_max;
+	}
+	public void setE(double e){
+		e_max = e;
+		run = Math.ceil(e_max / p_max);
 	}
 }
