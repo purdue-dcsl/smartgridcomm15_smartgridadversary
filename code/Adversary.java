@@ -127,12 +127,17 @@ public class Adversary {
 			boolean success = false;
 			for(int i = 0; i < num; i++){
 				if(d < prob[i]){
-					//if not attacked already, mark them to attack
+					//if not attacked already or defended, mark them to attack
 					if(!attack[i] && !def[i]) {
 						attack[i] = true;
 						success = true;
 						break;
 					}
+                    //if defended but not attacked attack fails
+                    else if(!attack[i]){
+                        success = true;
+                        break;
+                    }
 					break;
 				}
 			}

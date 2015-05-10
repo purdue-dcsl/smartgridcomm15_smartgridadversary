@@ -140,8 +140,8 @@ public class Simulator{
 	}
 	
 	public static void main(String[] args){
-		if(args.length != 3){
-			System.out.println("Usage: java Simulator <time> <rng seed> <attack_model>");
+		if(args.length != 4){
+			System.out.println("Usage: java Simulator <time> <rng seed> <attack_model> <% to attack>");
 			System.exit(1);
 		}
 
@@ -237,16 +237,20 @@ public class Simulator{
 		Plant p = new Plant(power_mean, power_sdev, seed);
 		
 		double baseline = simulate(buckets, batteries, bakeries, p, K);
-		
-		Adversary a = new Adversary(args[2], (int)Math.ceil(Customers * .1), seed);
+        
+        double percent = Integer.parseInt(args[3]) / 100.0;
+        int num_attack = (int)Math.ceil(percent*Customers);
+        num_attack = (num_attack > numBakery) ? numBakery : num_attack;
+        
+		Adversary a = new Adversary(args[2], num_attack, seed);
 		a.attack(bak);
 		Plant p2 = new Plant(power_mean, power_sdev, seed);
 		double before = simulate(buck, bat, bak, p2, K);
 		
-		Adversary b = new Adversary(args[2], (int)Math.ceil(Customers * .1), seed);
+		Adversary b = new Adversary(args[2], num_attack, seed);
 		b.attack_defend(bk);
 		Plant p3 = new Plant(power_mean, power_sdev, seed);
 		double after = simulate(buc, bt, bk, p3, K);
-		System.out.printf("%10.2f,%10.2f,%10.2f\n", baseline, before, after);
+		System.out.printf("%10d,%10.2f,%10.2f,%10.2f\n", Integer.parseInt(args[3]), baseline, before, after);
 	}
 }
