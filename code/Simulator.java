@@ -5,14 +5,14 @@ import java.util.ArrayList;
 
 public class Simulator{
 
-	public static int numBakery = 200;
-	public static int numBattery = 200;
-	public static int numBucket = 200;
+	public static int numBakery = 5000;
+	public static int numBattery = 5000;
+	public static int numBucket = 5000;
 
-	public static final int power_mean = 10;    //absolute mean for power plant
+	public static final int power_mean = 100;    //absolute mean for power plant
 	public static final int power_sdev = 10;     //absolute sdev for power plant
 	
-	public static final double cust_sdev = .3;    //percentage of mean
+	public static final double cust_sdev = .1;    //percentage of mean
 
 	public static double forced(Constrained[] cust, int num_cust, double time){
 		double ret = 0;
