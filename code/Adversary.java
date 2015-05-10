@@ -15,8 +15,7 @@ public class Adversary {
 		this.seed = seed;
 	}
 	
-	public void attack(ArrayList<Bucket> buckets, ArrayList<Bakery> bakeries, int K){
-		Random r = new Random(seed);
+	public void attack(Random r,ArrayList<Bucket> buckets, ArrayList<Bakery> bakeries, int K){
 		
 		/* Sort in order of agility factor */
 		Collections.sort(bakeries);      //least agile first
@@ -86,8 +85,7 @@ public class Adversary {
 			}
 		}
 	}
-	public int attack_defend(ArrayList<Bucket> buckets, ArrayList<Bakery> bakeries, int K){
-		Random r = new Random(seed);
+	public int attack_defend(Random r, ArrayList<Bucket> buckets, ArrayList<Bakery> bakeries, int K){
         int delta = 0;
 		
 		/* Sort in order of agility factor */
