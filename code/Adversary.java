@@ -21,7 +21,9 @@ public class Adversary {
 		Collections.sort(bakeries);      //least agile first
 		
 		/*Want to attack the most agile, decrease the overall flexibility */
-		int num = bakeries.size();
+		int num;
+		if(type.equals("fdi-class")) num = buckets.size();
+		else num = bakeries.size();
 		double sum = num*(num+1)/2;
 		double[] prob = new double[num];
 		//starts with least agile - which get the least weight.
@@ -92,7 +94,9 @@ public class Adversary {
 		Collections.sort(bakeries);      //least agile first
 		
 		/*Want to attack the most agile, decrease the overall flexibility */
-		int num = bakeries.size();
+		int num;
+		if(type.equals("fdi-class")) num = buckets.size();
+		else num = bakeries.size();
 		double sum = num*(num+1)/2;
 		double[] prob = new double[num];
 		//starts with least agile - which get the least weight.
