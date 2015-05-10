@@ -8,6 +8,10 @@
 \usepackage{hyperref}
 \usepackage{epstopdf}
 \usepackage{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\setlength{\heavyrulewidth}{1.5pt}
+\setlength{\abovetopsep}{4pt}
 
 \hyphenation{op-tical net-works semi-conduc-tor}
 
@@ -39,12 +43,12 @@ With the advent of the smart grid, this picture is giving way to dynamic supply 
 aware of the prevailing price of energy and calibrate its usage accordingly. 
 
 In the smart grid, consumers can also communicate their power demands and constraints to the utility, who can then schedule
-power dispatch to them accordingly.  For example, if the communicated demand over the next time window (15 minutes out, one hour out, etc.) exceeds the anticipated supply, the utility may decide to fire up an expensive generator using fossil fuel. One crucial observation enabling this kind of dynamic demand-supply negotiation is that some demand loads are flexible (``elastic'' in economic-speak) in that they can be scheduled to run at any time within a time window. For example, running the dishwasher or charging an electric vehicle is flexible as long as it is completed by a certain time. Other kinds of loads, such as running the AC in the summer, are not flexible. In aggregate though, the presence of elastic loads will enable consumers to indicate flexible usage periods to the utility, and the utility to schedule its various sources of electricity in a price-optimal manner. This beneficial aspect of the smart grid has been expressed in many publications and even mainstream books (such as, Thomas Friedman's ``Hot, Flat, and Crowded'' from 2009). The scheduling problem for the utility has been investigated in many publications, many of which provide a theoretically rigorous treatment of the problem [XXX]. 
+power dispatch to them accordingly.  For example, if the communicated demand over the next time window (15 minutes out, one hour out, etc.) exceeds the anticipated supply, the utility may decide to fire up an expensive generator using fossil fuel. One crucial observation enabling this kind of dynamic demand-supply negotiation is that some demand loads are flexible (``elastic'' in economic-speak) in that they can be scheduled to run at any time within a time window. For example, running the dishwasher or charging an electric vehicle is flexible as long as it is completed by a certain time. Other kinds of loads, such as running the AC in the summer, are not flexible. In aggregate though, the presence of elastic loads will enable consumers to indicate flexible usage periods to the utility, and the utility to schedule its various sources of electricity in a price-optimal manner. This beneficial aspect of the smart grid has been expressed in many publications and even mainstream books (such as, Thomas Friedman's ``Hot, Flat, and Crowded'' from 2009). The scheduling problem for the utility has been investigated in many publications, many of which provide a theoretically rigorous treatment of the problem \cite{pertersen2013taxonomy}. 
 
 % Offsetting the demand smoothing from increased consumer flexibility will be increased variation in power supply. More and more power will come from distributed and unpredictable sources: renewables such as wind and solar. These power supplies may flucuate during the day, and the level of power available from them at any given point is not knowable in advance.
 % SB (5/8/15): There is repeat of this material. 
 
-However, no prior work has investigated the impact of security attacks on such scheduling. Security attacks in the smart grid are widely anticipated [XXX] and many demonstrations have been done in laboratory settings [XXX]. It is till now unknown how security attacks --- jamming, false data injection, and delays in the communication channel --- affect the scheduling problem. The ultimate possible impact could be in the form of brownouts or blackouts and in our evaluation, we bring this out in the form of instantaneous mismatches between the demand the supply. A mismatch is undesriable in both directions --- if the demand is larger, this may lead to brownouts or blackouts, and if the supply is larger, then this may mean that the utility had to use more expensive sources of energy to fill a perceived (but ultimately incorrect) demand. The attacks could result in these impacts by disrupting the communication of the actual demand. Due to the interconnected nature of the smart grid, there are many possible entry points for such attacks --- the smart meters, the connection of these to the neighborhood data collection unit (DCU), the connection between the DCU and the control station at the local sub-station, etc. In addition to demonstrating the effect of such attacks, we take well-known security controls and evaluate how using them in our smart grid setting will mitigate the effects of some of these attacks. For example, we show that transient denial of service can be sucessfully ``fought through'' by using historical data of demand, even when the demand is somewhat fluctuating from day-to-day, provided a good characterization of the elasticity of the loads can be done. 
+However, no prior work has investigated the impact of security attacks on such scheduling. Security attacks in the smart grid are widely anticipated \cite{nist} and many demonstrations have been done in laboratory settings \cite{hussain2012ncs}. It is till now unknown how security attacks --- jamming, false data injection, and delays in the communication channel --- affect the scheduling problem. The ultimate possible impact could be in the form of brownouts or blackouts and in our evaluation, we bring this out in the form of instantaneous mismatches between the demand the supply. A mismatch is undesriable in both directions --- if the demand is larger, this may lead to brownouts or blackouts, and if the supply is larger, then this may mean that the utility had to use more expensive sources of energy to fill a perceived (but ultimately incorrect) demand. The attacks could result in these impacts by disrupting the communication of the actual demand. Due to the interconnected nature of the smart grid, there are many possible entry points for such attacks --- the smart meters, the connection of these to the neighborhood data collection unit (DCU), the connection between the DCU and the control station at the local sub-station, etc. In addition to demonstrating the effect of such attacks, we take well-known security controls and evaluate how using them in our smart grid setting will mitigate the effects of some of these attacks. For example, we show that transient denial of service can be sucessfully ``fought through'' by using historical data of demand, even when the demand is somewhat fluctuating from day-to-day, provided a good characterization of the elasticity of the loads can be done. 
 
 We build a discrete event simulator with two actors --- a strategic adversary and a defender (can be taken to model a utility). The adversary has a budget for the attack, in terms of the number of assets she can simultaneously target, and performs a game-theoretic determination of which assets to target subject to the budget constraint. The defender also performs a game-theoretic determination of which assets to make more secure against the above types of attacks. The discrete event simulation can model various intensities of attacks, different characteristics of loads, and different budgets for the adversary and the defender. For each configuration, it can provide the mismatch metric without any attack, with the attack and without any defense, and with the attack and with the defense controls in place. 
 \textcolor{red} {Give 1-2 main results here.}
@@ -111,8 +115,30 @@ The utility has two inputs: the amount of power generated by the renewable sourc
 \label{Game}
 
 This section defines the game between the adversary and the utility. This is a multistage game, with moves being made at each time step. We consider several variations on this game, which are differentiated by the adversary model. In general, the adversary seeks to maximally disrupt the grid by making strategic use of its limited resources to disrupt the grid. We play the game first with the utility only being allowed to follow its scheduling algorithm on the input it receives. We then replay the game after the utility has made strategic defensive investments based on the outcome of the first game. As such the game serves as an impact analysis platform that can guide defensive investments, and show the impact that they have against the adversary.  
-% SB (5/8/15): Put a table of attack and defense strategies and in that bring out where a game theoretic decision is made by defender.
-% Attacker is picking randomly, but weighted - bakeries are more lucrative to attack and within that, by demand.
+
+\begin{table}[!htbp]
+\label{strategies}
+\centering
+\begin{tabular}{p{2cm} | p{3cm} | p{3cm}}
+\toprule
+Class & Adversary & Utility\\
+\midrule
+Jamming & Attacker Jams a subset of the bakeries.  & Utility uses historical data with accuracy +-20\% \\
+False Data Injection - Load &  Attacker Increases the load of a subset of bakeries by 20\% & Utility encrypts communications with a subset of bakeries, preventing them from being attacked \\
+False Data Injection - Time & Attacker changes the timing constraint of a subset of bakeries such that they all must run at the same time & Utility encrypts communications with a subset of bakeries, preventing them from being attacked \\
+False Data Injection - Class & Attacker permutes a subset of buckets into bakeries & Utility encrypts communications with a subset of the buckets such that they cannot be permuted\\
+\bottomrule
+\end{tabular}
+\caption{Attack and Defense Strategies}
+\end{table}
+
+\ref{strategies} provides an overview of the adversary and utility strategies, explained in more depth below.  When choosing which subset to attack or defend, the adversary and the utility weight individual bakeries / buckets by their agility factor \cite{petersen2013taxonomy} which encapsulates how much flexibility the customer
+is providing the system (higher agility = more flexibility).  The proabilities are assigned according to \ref{probability}.
+
+\begin{equation}
+\label{probability}
+\sum\limits_{i=1}^n \frac{i}{\frac{n*(n+1)}{2}} = 1
+\end{equation}
 
 \subsection{Operational Rules}
 \label{Rules}
@@ -126,14 +152,14 @@ on the utility is determined.
 The adversary's goal is to force the utility to either waste power, or have to pull power from the backup. Either of these sources of wated power cost the utility money. This allows us to state the attacker's goal as to maximize the cost of the attack to the utility. To do this we present the following adversary model. Note that the idea of jamming \cite{gupta2010optimal}, and false data injection on loads \cite{lin2012false}\cite{yuan2011modeling} are established in the literature, though novel in this context. The false data injection on time constraints and consumer classification are new extensions on false data injection made possible by the presence of heterogenous customers.
 
 \begin{itemize}
-\item Jamming. The attacker can jam communication between the utility and producers / consumers. We model this in terms of the number of customers prevented from communicating with the utility, divorced from any specific topology. We assume that the attacker can jam 5\%, 10\%, or 15\% of the utility's customers. This is not a stealthy attack: the utility can tell that the communication channel has been jammed.
+\item Jamming. The attacker can jam communication between the utility and producers / consumers. We model this in terms of the number of customers prevented from communicating with the utility, divorced from any specific topology. We assume that the attacker can jam a percentage of the utility's customers, as detailed in \ref{Simulation}. This is not a stealthy attack: the utility can tell that the communication channel has been jammed.
 
-\item False Data Injection - Load. The attacker can modify the communicated demand from consumers / supply from producers. Here the attacker can remain stealthy. While the exact amount of noise the attacker can inject depends on a number of factors \cite{yuan2011modeling}, for our purposes - exploring the effect of this attack given heterogenous customers - it is sufficient to assume that the attacker can modify the demand by 5\%, 10\%, or 15\%. This is a stealthy attack, the utility has no way of knowing that this has been done.
+\item False Data Injection - Load. The attacker can modify the communicated demand from consumers / supply from producers. Here the attacker can remain stealthy. While the exact amount of noise the attacker can inject depends on a number of factors \cite{yuan2011modeling}, for our purposes - exploring the effect of this attack given heterogenous customers - it is sufficient to assume that the attacker can increase the demand by 20\%. This is a stealthy attack, with no known statistical method of detecting it \cite{yuan2011modeling}.
 
-\item False Data Injection - Modify Time Constraints. Here the attacker can change the consumer's time constraints, ie he can cluster the demands more tightly. This can signfiicantly decrease the flexibility available to the utility by forcing power to be distributed to many customers at the same time. We constrain the attacker to only modify the time constraints of 5\%, 10\%, or 15\% of customers, but assume that the utility cannot detect the attack.
+\item False Data Injection - Modify Time Constraints. Here the attacker can change the consumer's time constraints, ie he can cluster the demands more tightly. This can signfiicantly decrease the flexibility available to the utility by forcing power to be distributed to many customers at the same time. We assume a straightforward extension of \cite{yuan2011modeling} such that there is no known statistical method for detecting this attack.  How the attacker clusters the demands is detailed in \ref{Simulation}.
 
 \item False Data Injection - Change Customer Class. Buckets are very useful to the utility in scheduling because they provide
-the most additional flexibility. The attacker could target them by adding constraints such that the buckets become bakeries. We constrain the attacker to modifying no more than 5\%, 10\%, or 15\% of the bakeries, but assume that the attacker is stealthy within those constraints.
+the most additional flexibility. The attacker could target them by adding constraints such that the buckets become bakeries.  Here we allow the attacker to modify a percentage of the buckets, as detailed in \ref{Simulation}.  We assume sufficient noise in the composition of the customers (ie buckets, bakeries, or batteries) that this modification cannot be detected with any known technique.
 
 \end{itemize}
 
@@ -141,34 +167,30 @@ the most additional flexibility. The attacker could target them by adding constr
 \label{Utility2}
 
 The utility's core strategy is to detect and correct for any malicious communications. This will allow its performance to be
-constrained solely by its scheduling algorithm (out baseline) and not by the attacker. However, only the jamming attack is detectable by the utility. Consequently, the best that the utility can do against the other attacks is to make defensive investments. The utiltiy plays the game against the other types of attack, and then picks a set of defensive investments. These limit the amount of damage that the attacker can inflict. As a result of this, the utility can limit and qunatify the maximum amount of damage it is suffering.
+constrained solely by its scheduling algorithm (out baseline) and not by the attacker. However, only the jamming attack is detectable by the utility, assuming the attacker follows the constrainst set forth in \cite{yuan2011modeling}. Consequently, the best that the utility can do against the other attacks is to make defensive investments. The utility knows the attacker's strategy.  Consequently, the utility can pick a subset of the same size of the attacker, chosen using the same criteria, and defend it. The utility's defense employ stronger (and therefor more expensive) cryptography when communicating with the defended customer.  An example would be adding public key authentication. This defense is assumed to be too burdensome for general deployment, but practical enough for limited use as a defense. This defense allows the utility to significantly blunt the damage inflicted by the adversary \ref{Exprerimental Results}.
 
 \begin{itemize}
-\item Jamming. Jamming is always detected. The utility corrects for this by using historical data. We examine the effects 
-of the historical data being 5\%, 20\%, or 50\% inaccurate as to load, but assume that the constraints in the historical data are accurate. That is, if if a customer was a battery before being jammer, a customer is a battery afterwards, and has the same time constraint.
+\item Jamming. Jamming is always detected. The utility corrects for this by using historical data. The historical load data is accurate to within 20\%.  This means that the jamming attack may actually ease the scheduling problem (by decreasing load), though even in this case it would lead to brownouts as customers receive less power than they require (this effect is left for future work).  Note that we assume that the constraints in the historical data are accurate. That is, if if a customer was a battery before being jammer, a customer is a battery afterwards, and has the same time constraint.
 
-\item False Data Injection - All Varieties. The utility cannot directly defend itself against this attack, because it cannot be detected. However, the very need to remain stealthy limits the attack. Additionally, the utility can perform an impact analysis, and defend certain customers against this attack. This passive defense further limits the amount of damage that the attacker can inflict. If the utility were to institute a policy that all constraints (load, time, constant power) could only be relaxed (decreased, delayed, removed) then these attacks would become impossible (the attacker could only make the utility's scheduling job easier, not harder). However, we consider such policies to be too constraining on customers, and unlikely to be deployed.
-% SB (5/8/15): Defense is cryptographically securing a subset of the consumers, with weighting favoring the heavy consumers. 
+\item False Data Injection - All Varieties. The utility cannot actively defend itself against this attack, because there is no known technique to detect it assuming the adversary stays within its limits. The utility can, however, model the adversary's likely targets and defend them against attack, as described in \ref{Utility2}. This passive defense further limits the amount of damage that the attacker can inflict. If the utility were to institute a policy that all constraints (load, time, constant power) could only be relaxed (decreased, delayed, removed) then these attacks would become impossible (the attacker could only make the utility's scheduling job easier, not harder). However, we consider such policies to be too constraining on customers, and unlikely to be deployed.
 
 \end{itemize}
-
-In our game, it is more costly for the utility to use backup power than to waste power. This reflects the fact that standby power generation for this purpose is more expensive than the production of renewable power.
-
-TODO: cost function stuff above seems weak
 
 \section{Simulation}
 \label{Simulation}
 
-% SB (5/8/15): Talk about the code, open sourcing it, what are the parameters, demand and supply are in sync
+This section provides a brief overview of our open source simulator [XXXX], describing its parameters and use.  The simulator takes as command line arguments how long the simulation is, a seed for its random number generator, which attack model to use, and what percent of the customers the attacker can effect.  It outputs the amount of power either wasted (positive number) or required from backup sources (negative number).  It gives three such results: the baseline result without the attack, the result with the attack, and the result with both the attack and defense.
+
+Internally, the renewable energy producers are modeled collectively.  We assume that there are sufficiently many of them that the central limit theorem applies and they are normally distributed in aggregate.  Consequently, we sample from a normal distribution at each time step to find the amount of power produced.  The mean and median of this distribution are tunable in the code, and are members of the Simulator class.
+
+The number of Bakeries, Batteries, and Buckets is tunable in the code, with members of the Simulator class for each.  When initializing them, we first calculate the total amount of power available, on average, over the simulation by multiplying the mean of the producers by the simulation run time.  This is then divided by the total number of customers to get the mean power required per customer.  We again assume that the customers in aggregate follow a normal distribution as per the central limit theorem.  The standard deviation of this distribution, expressed as a percentage of the mean, is a user tunable member of the Simulator class.  We sample this distribution once for each customer to get the amount of power actually required for the customer.  Note that this implies that on average the amount of power demanded and supplied is equal, which makes the scheduling problem tractable.  We then calculate the minimum amount of energy each customer must receive per time step to statisfy his total demand. We increase this amount of energy by a random percentage, and based on this energy per time step compute the earliest time that the customer could be finished.   We then select the actual required finish time (for Bakeries and Batteries) uniformly over [earliest, simulation end].  
+
+As mentioned abover, the percent of customers that can be attacked is a parameter to the simulator.  This is used to calculated the actual number of customers attacked.  We make the simplifying assumption that the number of customers attacked is less than the number of Bakeries for the Jam, False Data Injection - Load, and False Data Injection - Time attacks.  This allows our adversary model to only consider Bakeries for those attacks.  Bakeries are the most constrained customers, so attacks against them are the most damaging.  For the False Data Injection - Class attack we assume that there are sufficient Buckets in the system so that only Buckets are attacked.  As above, turning a Bucket into a Bakery (most flexible into least flexible) is the most damaging attack.
 
 \section{Experimental Results}
 \label{Experimental Results}
 
-TODO: Need to show baseline (ie under the previously published scheduling algorithm) vs with attacker results. Probably
-do figures by attack class, and show the percentage degradation in performance. Have multiple lines for each level of attacker
-capability (ie how many customers / producers the attacker was able to effect).
-
-TODO: We should show with / without proposed defenses.
+We used the simulator to examine the results of the game between the adversary and the utility described in \ref{Game}.  We examined the effectiveness of our four proposed adversarial strategies and our suggested defense techniques under two different scenarios.  In the first, there are an equal number of each class of customer.  In the second, 40\% are Bakeries, 40\% are Batteries, and 20\% are Buckets.  All of our results are over 15,000 total customers in order to make our distribution assumptions accurate.  Further, the results presented here are average over 10 different random number seeds in order to eliminate any bias in a given sample from the distributions.
 
 
 \section{Conclusions}
