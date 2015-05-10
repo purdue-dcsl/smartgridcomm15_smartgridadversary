@@ -252,7 +252,7 @@ public class Simulator{
         ArrayList<Bucket> buck2 = new ArrayList<Bucket>(Arrays.asList(buck));
         ArrayList<Bakery> bak2 = new ArrayList<Bakery>(Arrays.asList(bak));
 		Adversary a = new Adversary(args[2], num_attack, seed);
-		a.attack(buck2, bak2, K);
+		a.attack(r, buck2, bak2, K);
         //System.out.printf("buck2 size: %d / %d\n", buck2.size(), numBucket);
         //System.out.printf("bak2 size: %d / %d \n", bak2.size(), numBakery);
 		Plant p2 = new Plant(power_mean, power_sdev, seed);
@@ -263,7 +263,7 @@ public class Simulator{
         ArrayList<Bucket> buc2 = new ArrayList<Bucket>(Arrays.asList(buc));
         ArrayList<Bakery> bk2 = new ArrayList<Bakery>(Arrays.asList(bk));
 		Adversary b = new Adversary(args[2], num_attack, seed);
-		int delta = b.attack_defend(buc2, bk2, K);
+		int delta = b.attack_defend(r, buc2, bk2, K);
         if(args[2].equals("fdi-class")){
             numBakery -= delta;
             numBucket += delta;

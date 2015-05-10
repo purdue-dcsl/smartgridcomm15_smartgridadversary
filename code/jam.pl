@@ -9,13 +9,13 @@ $time = 100;
 $att = "jam";
 @percentage = (5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
 
-`printf "%10s,%10s,%10s,%10s\n" percent baseline before after > $att_parallel.csv`  
+$cmd = "printf \"%10s,%10s,%10s,%10s\n\" percent baseline before after > $att" . "_parallel.csv";
+system($cmd);
 
-foreach my $per (@percentage) {
-  foreach my $seed (@seeds){
+foreach $per (@percentage) {
+  foreach $seed (@seeds){
     $cmd = "java Simulator " . $time . " " . $seed . " " . $att . " " . $per . " >> " . $att . "_parallel.csv";
     print $cmd . "\n";
     system($cmd);
   }
 }
-`mv *.csv ../data`
