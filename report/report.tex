@@ -26,11 +26,9 @@
 \maketitle
 
 \begin{abstract}
-One of the key benefits of the smart grid is the ability to integrate new power sources, most notably renewables.  However, these sources produces variable amounts of power, which makes fulfilling consumer demands challenging.  To offset this however, the smart grid will allow consumers to add flexibility to their demands.  This added flexibility will let the utility smooth demand and reduce peak demand by rescheduling flexible consumers to off peak times.  All of this will rely on the cyber component of the smart grid, which means that it is susceptible to malicious manipulation.  This paper examines a system with variable power supply and flexible consumer demand in the face of a limited, strategic adversary.  We model the game between the utility and the adversary and the utility to find the impact of various attacks, and who how much effect strategic defensive investments can have.
+One of the key benefits of the smart grid is the ability to integrate new power sources, most notably renewables.  However, these sources produces variable amounts of power, which makes fulfilling consumer demands challenging.  To offset this however, the smart grid will allow consumers to add flexibility to their demands.  This added flexibility will let the utility smooth demand and reduce peak demand by rescheduling flexible consumers to off peak times.  All of this will rely on the cyber component of the smart grid, which means that it is susceptible to malicious manipulation.  This paper examines a system with variable power supply and flexible consumer demand in the face of a limited, strategic adversary.  We model the game between the utility and the adversary and the utility to find the impact of various attacks, and who how much effect strategic defensive investments can have.  We find that the attacker can increase standby power usage by 50\%, and that our defensive strategy can halve this to 25\%.
 
 \end{abstract}
-
-% SB (5/9/15): Editorial comment. Use a single space after a period - thus ``impact. This is'' rather than ``impact.  This is''.
 
 \section{Introduction}
 \label{Introduction}
@@ -45,20 +43,14 @@ aware of the prevailing price of energy and calibrate its usage accordingly.
 In the smart grid, consumers can also communicate their power demands and constraints to the utility, who can then schedule
 power dispatch to them accordingly.  For example, if the communicated demand over the next time window (15 minutes out, one hour out, etc.) exceeds the anticipated supply, the utility may decide to fire up an expensive generator using fossil fuel. One crucial observation enabling this kind of dynamic demand-supply negotiation is that some demand loads are flexible (``elastic'' in economic-speak) in that they can be scheduled to run at any time within a time window. For example, running the dishwasher or charging an electric vehicle is flexible as long as it is completed by a certain time. Other kinds of loads, such as running the AC in the summer, are not flexible. In aggregate though, the presence of elastic loads will enable consumers to indicate flexible usage periods to the utility, and the utility to schedule its various sources of electricity in a price-optimal manner. This beneficial aspect of the smart grid has been expressed in many publications and even mainstream books (such as, Thomas Friedman's ``Hot, Flat, and Crowded'' from 2009). The scheduling problem for the utility has been investigated in many publications, many of which provide a theoretically rigorous treatment of the problem \cite{pertersen2013taxonomy}. 
 
-% Offsetting the demand smoothing from increased consumer flexibility will be increased variation in power supply. More and more power will come from distributed and unpredictable sources: renewables such as wind and solar. These power supplies may flucuate during the day, and the level of power available from them at any given point is not knowable in advance.
-% SB (5/8/15): There is repeat of this material. 
-
 However, no prior work has investigated the impact of security attacks on such scheduling. Security attacks in the smart grid are widely anticipated \cite{nist} and many demonstrations have been done in laboratory settings \cite{hussain2012ncs}. It is till now unknown how security attacks --- jamming, false data injection, and delays in the communication channel --- affect the scheduling problem. The ultimate possible impact could be in the form of brownouts or blackouts and in our evaluation, we bring this out in the form of instantaneous mismatches between the demand the supply. A mismatch is undesriable in both directions --- if the demand is larger, this may lead to brownouts or blackouts, and if the supply is larger, then this may mean that the utility had to use more expensive sources of energy to fill a perceived (but ultimately incorrect) demand. The attacks could result in these impacts by disrupting the communication of the actual demand. Due to the interconnected nature of the smart grid, there are many possible entry points for such attacks --- the smart meters, the connection of these to the neighborhood data collection unit (DCU), the connection between the DCU and the control station at the local sub-station, etc. In addition to demonstrating the effect of such attacks, we take well-known security controls and evaluate how using them in our smart grid setting will mitigate the effects of some of these attacks. For example, we show that transient denial of service can be sucessfully ``fought through'' by using historical data of demand, even when the demand is somewhat fluctuating from day-to-day, provided a good characterization of the elasticity of the loads can be done. 
 
 We build a discrete event simulator with two actors --- a strategic adversary and a defender (can be taken to model a utility). The adversary has a budget for the attack, in terms of the number of assets she can simultaneously target, and performs a game-theoretic determination of which assets to target subject to the budget constraint. The defender also performs a game-theoretic determination of which assets to make more secure against the above types of attacks. The discrete event simulation can model various intensities of attacks, different characteristics of loads, and different budgets for the adversary and the defender. For each configuration, it can provide the mismatch metric without any attack, with the attack and without any defense, and with the attack and with the defense controls in place. 
-\textcolor{red} {Give 1-2 main results here.}
-We have released our simulator as an open source project, along with our simulation datasets at \textcolor{red}{Give URL}. 
 
-% This creates a coordination and scheduling problem for the utility. The utilities goal is to use all available power at any
-% % given time, constrained by the need to meet consumer's demands. If the utility faces a short fall, it has to turn to more 
-% expensive standby power sources to make up the difference. Any power that the utility cannot dispatch is wasted.
+We find that two new classes of attack - changing the time constraints of customer demand, and adding constraints to customer demand - can have a signficant impact, increasing the mismatch by up to 50\%.  These two attacks directly target the amount of flexibility available to the utility when dispatching power to the consumer, and so serve to hgihlight the critical importance of that flexiblity to the system.  Our defensive strategy can halve the additional mismatch from the attack, which shows that systems designed with these new attack surfaces in mind can be robust to these new attack surfaces.  
 
-% This scheduling problem is not the only difficulty facing the utility though. Information about consumer power demands and constraints as well as the amount of power being produced flows over a communications network, and it is tautological that any communications network can and will be attacked. We propose a malicious strategic adversary with strong abilities, whose goal is to destabilize the grid while remaining undetected. 
+We have released our simulator as an open source project, along with our simulation datasets at \textcolor{red}{Give URL}.  The rest of the paper is organized as follows: \ref{Related Work} surveys existing work in the field, \ref{Model} details our model of the customers, power producers, utility, and adversary, \ref{Game} defines the strategic game between the adversary and the utility, \ref{Simulation} provides and overview of our simulator, \ref{Experimental Results} gives the details of our results, and \ref{Conclusion} concludes.
+
 % SB (5/8/15): Point to some real deployment like this and some real instance of attack. 
 % Nobody has shown how damaging an attack can be in such environments. We show that and show how relatively simple defense mechanisms based on prior work can mitigate these attacks. 
 % Explain what destabilization means. 
@@ -192,11 +184,29 @@ As mentioned abover, the percent of customers that can be attacked is a paramete
 
 We used the simulator to examine the results of the game between the adversary and the utility described in \ref{Game}.  We examined the effectiveness of our four proposed adversarial strategies and our suggested defense techniques under two different scenarios.  In the first, there are an equal number of each class of customer.  In the second, 40\% are Bakeries, 40\% are Batteries, and 20\% are Buckets.  All of our results are over 15,000 total customers in order to make our distribution assumptions accurate.  Further, the results presented here are average over 10 different random number seeds in order to eliminate any bias in a given sample from the distributions.
 
+\begin{figure}[!htbp]
+\label{equal}
+\centering
+\includegraphics[width=.5\textwidth]{equal-attacks.png}
+\caption{Attack strategies with equal numbers of customers in each class}
+\end{figure}
+
+\ref{equal} shows the results for the first scenario, with 5,000 Bakeries, Batteries, and Buckets.  The first important thing to note is that in all cases the defense strategy halves the efficacy of the attack.  It is also interesting ot compare the efficacy of the different classes of attack.  Both the jamming attack and the false data injection - load attack are essentially ineffective.  Both permute the load of a subset of bakeries by ~20\%, which is not enough to have a significant effect of the utility's scheduling problem, and shows the efficacy of existing techniques for dealing with this problem.  However, the time and class injections had a large impact, at 26\% and 52\% respectively.  Both of these attacks are only made possible by the advent of the smart grid and the addtional information that it communicates.  Our defensive investment strategy was able to decrease the malicious effects to 14\% and 27\% respectively.  This illustrates that these new vulnerabilities can be mitigated, and highlights the need to do so.
+
+\begin{figure}[!htbp]
+\label{unequal}
+\centering
+\includegraphics[width=.5\textwidth]{unequal-attacks.png}
+\caption{Attack strategies with different numbers of customers in each class}
+\end{figure}
+
+\ref{unequal} shows the results for the second scenario with 6,000 Bakeries and Batteries, and 3,000 Buckets.  The overall results here are roughly the same as for scenario one.  The item of interest is that the defense for false data injection - class becomes more and more effective as more customers are attacked.  This attack converts Buckets into Bakeries.  The efficacy of the defense highlights the critical flexibility that Buckets provide for the utility.
+
 
 \section{Conclusions}
 \label{Conclusions}
 
-TODO:  Filler!  Huzzah now we are at 6 pages.
+The smart grid provides greater flexiblity to the utility by recognizing inherent difference between customer's power demands, and this flexibility in turn helps the utility integrate new sources of energy, like renewables, that provide a fluctuating supply of power.  The problem for the utility is to schedule customers' demands and make the best possible use of renewable power (by minimizing both the amount of standby power used, and the amount of generated power that is not dispatched).  The additonal communication from customers to the utility - about their demand and its constraints - provides a new attack surface to malicious adversaries.  We find that in the worst case even a strategically limited adversary can increase the amount of standby power requried by 50\%.  Our proposed defensive strategy for the utility - to model what the adversary will likely attack and protect those assets - can cut this worst case number by at least half.
 
 \bibliographystyle{IEEEtran}
 \bibliography{./references.bib}
