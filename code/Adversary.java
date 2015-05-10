@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
+import java.util.ArrayList;
 
 
 public class Adversary {
@@ -14,14 +15,14 @@ public class Adversary {
 		this.seed = seed;
 	}
 	
-	public void attack(Bakery[] bakeries){
+	public void attack(ArrayList<Bucket> buckets, ArrayList<Bakery> bakeries, int K){
 		Random r = new Random(seed);
 		
 		/* Sort in order of agility factor */
-		Arrays.sort(bakeries);      //least agile first
+		Collections.sort(bakeries);      //least agile first
 		
 		/*Want to attack the most agile, decrease the overall flexibility */
-		int num = bakeries.length;
+		int num = bakeries.size();
 		double sum = num*(num+1)/2;
 		double[] prob = new double[num];
 		//starts with least agile - which get the least weight.
@@ -54,37 +55,46 @@ public class Adversary {
 			}
 		}
 		
-		for(int i = 0; i < num; i++){
+		for(int i = num - 1; i >= 0; i--){
 			if(attack[i]){
 				//jamming forces the utility back to historical data on load, leaves everything else the same
 				//data is accurate +- 20%
 				if(type.equals("jam")){
 					double scale = r.nextDouble()*.4 + .8;  //uniform over .8 - 1.2
-					double cur = bakeries[i].getE();
+					double cur = bakeries.get(i).getE();
 					//System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
-					bakeries[i].setE(cur*scale);
+					bakeries.get(i).setE(cur*scale);
 				}
 				else if(type.equals("fdi-load")){
 					double scale = 1.2;
-					double cur = bakeries[i].getE();
+					double cur = bakeries.get(i).getE();
 					//System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
-					bakeries[i].setE(cur*scale);
+					bakeries.get(i).setE(cur*scale);
 				}
                 else if(type.equals("fdi-time")){
-                    bakeries[i].setTime(bakeries[i].getRun());
+                    bakeries.get(i).setTime(bakeries.get(i).getRun());
+                }
+                else if(type.equals("fdi-class")){
+                    double e = buckets.get(i).getE();
+                    double pow = buckets.get(i).getPow();
+                    double t = (Math.ceil(e / pow) > K) ? K : Math.ceil(e/pow);
+                    Bakery b = new Bakery(e, pow, t);
+                    bakeries.add(b);
+                    buckets.remove(i);
                 }
 				/* Other attack types go here */
 			}
 		}
 	}
-	public void attack_defend(Bakery[] bakeries){
+	public int attack_defend(ArrayList<Bucket> buckets, ArrayList<Bakery> bakeries, int K){
 		Random r = new Random(seed);
+        int delta = 0;
 		
 		/* Sort in order of agility factor */
-		Arrays.sort(bakeries);      //least agile first
+		Collections.sort(bakeries);      //least agile first
 		
 		/*Want to attack the most agile, decrease the overall flexibility */
-		int num = bakeries.length;
+		int num = bakeries.size();
 		double sum = num*(num+1)/2;
 		double[] prob = new double[num];
 		//starts with least agile - which get the least weight.
@@ -102,7 +112,7 @@ public class Adversary {
 			boolean success = false;
 			for(int i = 0; i < num; i++){
 				if(d < prob[i]){
-					//if not attacked already, mark them to attack
+					//if not defended already, mark them to defend
 					if(!def[i]) {
 						def[i] = true;
 						success = true;
@@ -136,6 +146,7 @@ public class Adversary {
                     //if defended but not attacked attack fails
                     else if(!attack[i]){
                         success = true;
+                        delta++;
                         break;
                     }
 					break;
@@ -147,27 +158,36 @@ public class Adversary {
 			}
 		}
 		
-		for(int i = 0; i < num; i++){
-			if(attack[i]){
-				//jamming forces the utility back to historical data on load, leaves everything else the same
-				//data is accurate +- 20%
-				if(type.equals("jam")){
-					double scale = r.nextDouble()*.4 + .8;  //uniform over .8 - 1.2
-					double cur = bakeries[i].getE();
-					//System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
-					bakeries[i].setE(cur*scale);
-				}
-				else if(type.equals("fdi-load")){
-					double scale = 1.2;
-					double cur = bakeries[i].getE();
-					//System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
-					bakeries[i].setE(cur*scale);
-				}
-                else if(type.equals("fdi-time")){
-                    bakeries[i].setTime(bakeries[i].getRun());
+        for(int i = num - 1; i >= 0; i--){
+            if(attack[i]){
+                //jamming forces the utility back to historical data on load, leaves everything else the same
+                //data is accurate +- 20%
+                if(type.equals("jam")){
+                    double scale = r.nextDouble()*.4 + .8;  //uniform over .8 - 1.2
+                    double cur = bakeries.get(i).getE();
+                    //System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
+                    bakeries.get(i).setE(cur*scale);
                 }
-				/* Other attack types go here */
-			}
-		}
+                else if(type.equals("fdi-load")){
+                    double scale = 1.2;
+                    double cur = bakeries.get(i).getE();
+                    //System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
+                    bakeries.get(i).setE(cur*scale);
+                }
+                else if(type.equals("fdi-time")){
+                    bakeries.get(i).setTime(bakeries.get(i).getRun());
+                }
+                else if(type.equals("fdi-class")){
+                    double e = buckets.get(i).getE();
+                    double pow = buckets.get(i).getPow();
+                    double t = (Math.ceil(e / pow) > K) ? K : Math.ceil(e/pow);
+                    Bakery b = new Bakery(e, pow, t);
+                    bakeries.add(b);
+                    buckets.remove(i);
+                }
+                /* Other attack types go here */
+            }
+        }
+        return delta;
 	}
 }

@@ -21,6 +21,12 @@ public class Bucket implements Comparable<Bucket>{
 		e_curr = 0;
 		ag_factor = 0;
 	}
+    public double getE(){
+        return e_max;
+    }
+    public double getPow(){
+        return p_max;
+    }
 
 	public double getMaxPositiveConsume(){
 		return Math.min(e_max - e_curr, p_max);
