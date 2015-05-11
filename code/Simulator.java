@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class Simulator{
 
-	public static int numBakery = 6000;
-	public static int numBattery = 6000;
-	public static int numBucket = 3000;
+	public static int numBakery = 5000;
+	public static int numBattery = 5000;
+	public static int numBucket = 5000;
 
 	public static final int power_mean = 100;    //absolute mean for power plant
 	public static final int power_sdev = 10;     //absolute sdev for power plant
