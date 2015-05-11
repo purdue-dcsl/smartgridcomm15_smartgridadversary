@@ -14,7 +14,7 @@ system($cmd);
 
 foreach $per (@percentage) {
   foreach $seed (@seeds){
-    $cmd = "java Simulator " . $time . " " . $seed . " " . $att . " " . $per . " >> " . $att . "_parallel.csv";
+    $cmd = "java Simulator " . $time . " " . $seed . " " . $att . " " . $per . " false >> " . $att . "_parallel.csv";
     print $cmd . "\n";
     system($cmd);
   }

@@ -140,17 +140,19 @@ public class Adversary {
                     }
                     //bucket
                     else if( i < bat + buck){
+                        int j = i - bat;
                         double scale = r.nextDouble()*.4 + .8;  //uniform over .8 - 1.2
-                        double cur = buckets.get(i).getE();
+                        double cur = buckets.get(j).getE();
                         //System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
-                        buckets.get(i).setE(cur*scale);
+                        buckets.get(j).setE(cur*scale);
                     }
                     //bakery
                     else{
+                        int j = i - bat - buck;
                         double scale = r.nextDouble()*.4 + .8;  //uniform over .8 - 1.2
-                        double cur = bakeries.get(i).getE();
+                        double cur = bakeries.get(j).getE();
                         //System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
-                        bakeries.get(i).setE(cur*scale);
+                        bakeries.get(j).setE(cur*scale);
                     }
                 }
                 else if(type.equals("fdi-load") && !naieve){
@@ -169,17 +171,19 @@ public class Adversary {
                     }
                     //bucket
                     else if( i < bat + buck){
+                        int j = i - bat;
                         double scale = 1.2;
-                        double cur = buckets.get(i).getE();
+                        double cur = buckets.get(j).getE();
                         //System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
-                        buckets.get(i).setE(cur*scale);
+                        buckets.get(j).setE(cur*scale);
                     }
                     //bakery
                     else{
+                        int j = i - bat - buck;
                         double scale = 1.2;
-                        double cur = bakeries.get(i).getE();
+                        double cur = bakeries.get(j).getE();
                         //System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
-                        bakeries.get(i).setE(cur*scale);
+                        bakeries.get(j).setE(cur*scale);
                     }
                 }
                 else if(type.equals("fdi-time") && !naieve){
@@ -192,11 +196,13 @@ public class Adversary {
                     }
                     //no notion of time for buckets
                     else if(i < bat + buck) continue;
+                    //bakery
                     else{
-                        bakeries.get(i).setTime(bakeries.get(i).getRun());
+                        int j = i - bat - buck;
+                        bakeries.get(j).setTime(bakeries.get(j).getRun());
                     }
                 }
-                else if(type.equals("fdi-class")){
+                else if(type.equals("fdi-class") && !naieve){
                     double e = buckets.get(i).getE();
                     double pow = buckets.get(i).getPow();
                     double t = (Math.ceil(e / pow) > K) ? K : Math.ceil(e/pow);
@@ -204,7 +210,28 @@ public class Adversary {
                     bakeries.add(b);
                     buckets.remove(i);
                 }
-                
+                else if(type.equals("fdi-class") && naieve){
+                    //battery
+                    if(i < bat){
+                        double e = batteries.get(i).getE();
+                        double pow = batteries.get(i).getPower();
+                        double t = (Math.ceil(e / pow) > K) ? K : Math.ceil(e/pow);
+                        Bakery b = new Bakery(e, pow, t);
+                        bakeries.add(b);
+                        batteries.remove(i);
+                    }
+                    //bucket
+                    else if(i < bat + buck){
+                        int j = i - bat;
+                        double e = buckets.get(j).getE();
+                        double pow = buckets.get(j).getPow();
+                        double t = (Math.ceil(e / pow) > K) ? K : Math.ceil(e/pow);
+                        Bakery b = new Bakery(e, pow, t);
+                        bakeries.add(b);
+                        buckets.remove(j);
+                    }
+                    //else: nothing to do for bakery
+                }
                 /* Other attack types go here */
             }
         }
@@ -238,17 +265,19 @@ public class Adversary {
                     }
                     //bucket
                     else if( i < bat + buck){
+                        int j = i - bat;
                         double scale = r.nextDouble()*.4 + .8;  //uniform over .8 - 1.2
-                        double cur = buckets.get(i).getE();
+                        double cur = buckets.get(j).getE();
                         //System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
-                        buckets.get(i).setE(cur*scale);
+                        buckets.get(j).setE(cur*scale);
                     }
                     //bakery
                     else{
+                        int j = i - bat - buck;
                         double scale = r.nextDouble()*.4 + .8;  //uniform over .8 - 1.2
-                        double cur = bakeries.get(i).getE();
+                        double cur = bakeries.get(j).getE();
                         //System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
-                        bakeries.get(i).setE(cur*scale);
+                        bakeries.get(j).setE(cur*scale);
                     }
                 }
                 else if(type.equals("fdi-load") && !naieve){
@@ -267,17 +296,19 @@ public class Adversary {
                     }
                     //bucket
                     else if( i < bat + buck){
+                        int j = i - bat;
                         double scale = 1.2;
-                        double cur = buckets.get(i).getE();
+                        double cur = buckets.get(j).getE();
                         //System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
-                        buckets.get(i).setE(cur*scale);
+                        buckets.get(j).setE(cur*scale);
                     }
                     //bakery
                     else{
+                        int j = i - bat - buck;
                         double scale = 1.2;
-                        double cur = bakeries.get(i).getE();
+                        double cur = bakeries.get(j).getE();
                         //System.out.printf("cur: %f\tscale: %f\tnew: %f\n", cur, scale, cur*scale);
-                        bakeries.get(i).setE(cur*scale);
+                        bakeries.get(j).setE(cur*scale);
                     }
                 }
                 else if(type.equals("fdi-time") && !naieve){
@@ -290,11 +321,13 @@ public class Adversary {
                     }
                     //no notion of time for buckets
                     else if(i < bat + buck) continue;
+                    //bakery
                     else{
-                        bakeries.get(i).setTime(bakeries.get(i).getRun());
+                        int j = i - bat - buck;
+                        bakeries.get(j).setTime(bakeries.get(j).getRun());
                     }
                 }
-                else if(type.equals("fdi-class")){
+                else if(type.equals("fdi-class") && !naieve){
                     double e = buckets.get(i).getE();
                     double pow = buckets.get(i).getPow();
                     double t = (Math.ceil(e / pow) > K) ? K : Math.ceil(e/pow);
@@ -302,7 +335,28 @@ public class Adversary {
                     bakeries.add(b);
                     buckets.remove(i);
                 }
-                
+                else if(type.equals("fdi-class") && naieve){
+                    //battery
+                    if(i < bat){
+                        double e = batteries.get(i).getE();
+                        double pow = batteries.get(i).getPower();
+                        double t = (Math.ceil(e / pow) > K) ? K : Math.ceil(e/pow);
+                        Bakery b = new Bakery(e, pow, t);
+                        bakeries.add(b);
+                        batteries.remove(i);
+                    }
+                    //bucket
+                    else if(i < bat + buck){
+                        int j = i - bat;
+                        double e = buckets.get(j).getE();
+                        double pow = buckets.get(j).getPow();
+                        double t = (Math.ceil(e / pow) > K) ? K : Math.ceil(e/pow);
+                        Bakery b = new Bakery(e, pow, t);
+                        bakeries.add(b);
+                        buckets.remove(j);
+                    }
+                    //else: nothing to do for bakery
+                }
                 /* Other attack types go here */
             }
         }
