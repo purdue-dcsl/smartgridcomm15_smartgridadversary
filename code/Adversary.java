@@ -19,6 +19,7 @@ public class Adversary {
         boolean[] attack;
         
         if(naieve){
+            if(def == null){
             int num = bakeries.size() + batteries.size() + buckets.size();
             attack = new boolean[num];
             Arrays.fill(attack, false);
@@ -30,8 +31,23 @@ public class Adversary {
                     num_attacked++;
                 }
             }
+            }
+            else{
+                int num = bakeries.size() + batteries.size() + buckets.size();
+                attack = new boolean[num];
+                Arrays.fill(attack, false);
+                int num_attacked = 0;
+                while(num_attacked < to_attack){
+                    int i = r.nextInt(num);
+                    if(!attack[i] && !def[i]){
+                        attack[i] = true;
+                        num_attacked++;
+                    }
+                    else if(!attack[i]) num_attacked++;
+                }
+            }
         }
-        else if(def != null){
+        else if(def == null){
             /* Sort in order of agility factor */
             Collections.sort(bakeries);      //least agile first
             
