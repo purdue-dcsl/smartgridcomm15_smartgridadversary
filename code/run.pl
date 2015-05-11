@@ -16,7 +16,7 @@ foreach $att (@attacks){
 foreach my $per (@percentage) {
   foreach my $att (@attacks){
     foreach my $seed (@seeds){
-      $cmd = "java Simulator " . $time . " " . $seed . " " . $att . " " . $per . " >> " . $att . ".csv";
+      $cmd = "java Simulator " . $time . " " . $seed . " " . $att . " " . $per . " false >> " . $att . ".csv";
       print $cmd . "\n";
       system($cmd);
     }
