@@ -20,6 +20,19 @@ public class Battery implements Constrained, Comparable<Constrained>{
 		e_curr = 0;
 	}
 
+    public double getE(){
+        return e_max;
+    }
+    public void setE(double e){
+        e_max = e;
+    }
+    public double getTime(){
+        return t_done;
+    }
+    public void setTime(double t){
+        t_done = t;
+    }
+    
 	public void consume(double p_dispatch){
 		if(p_dispatch > p_max) {
 			System.out.println("error - too much power to a battery");

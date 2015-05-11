@@ -24,6 +24,10 @@ public class Bucket implements Comparable<Bucket>{
     public double getE(){
         return e_max;
     }
+    public void setE(double e){
+        e_max = e;
+        e_min = -e;
+    }
     public double getPow(){
         return p_max;
     }

@@ -141,8 +141,8 @@ public class Simulator{
 	}
 	
 	public static void main(String[] args){
-		if(args.length != 4){
-			System.out.println("Usage: java Simulator <time> <rng seed> <attack_model> <% to attack>");
+		if(args.length != 5){
+			System.out.println("Usage: java Simulator <time> <rng seed> <attack_model> <% to attack> <strategic attack>");
 			System.exit(1);
 		}
 
@@ -243,35 +243,38 @@ public class Simulator{
         int num_attack = (int)Math.ceil(percent*Customers);
         num_attack = (num_attack > numBakery) ? numBakery : num_attack;
         
-        if(args[2].equals("fdi-class")){
-            numBakery += num_attack;
-            numBucket -= num_attack;
-        }
-        
         //sloppy, but it works and I didn't have time to refactor
         ArrayList<Bucket> buck2 = new ArrayList<Bucket>(Arrays.asList(buck));
         ArrayList<Bakery> bak2 = new ArrayList<Bakery>(Arrays.asList(bak));
+        ArrayList<Battery> bat2 = new ArrayList<Battery>(Arrays.asList(bat));
 		Adversary a = new Adversary(args[2], num_attack, seed);
-		a.attack(r, buck2, bak2, K);
-        //System.out.printf("buck2 size: %d / %d\n", buck2.size(), numBucket);
-        //System.out.printf("bak2 size: %d / %d \n", bak2.size(), numBakery);
-		Plant p2 = new Plant(power_mean, power_sdev, seed);
+        boolean naieve = args[4].equals("false");
+		a.attack(r, buck2, bat2, bak2, K, naieve);
+        
+        Plant p2 = new Plant(power_mean, power_sdev, seed);
         Bucket[] buck3 = buck2.toArray(new Bucket[buck2.size()]);
         Bakery[] bak3 = bak2.toArray(new Bakery[bak2.size()]);
-		double before = simulate(buck3, bat, bak3, p2, K);
+        Battery[] bat3 = bat2.toArray(new Battery[bat2.size()]);
+        numBucket = buck2.size();
+        numBakery = bak2.size();
+        numBattery = bat2.size();
+		double before = simulate(buck3, bat3, bak3, p2, K);
 		
+        /*now with defense */
         ArrayList<Bucket> buc2 = new ArrayList<Bucket>(Arrays.asList(buc));
         ArrayList<Bakery> bk2 = new ArrayList<Bakery>(Arrays.asList(bk));
+        ArrayList<Battery> bt2 = new ArrayList<Battery>(Arrays.asList(bt));
 		Adversary b = new Adversary(args[2], num_attack, seed);
-		int delta = b.attack_defend(r, buc2, bk2, K);
-        if(args[2].equals("fdi-class")){
-            numBakery -= delta;
-            numBucket += delta;
-        }
-        //System.out.printf("buc2 size: %d / %d\n", buc2.size(), numBucket);
-        //System.out.printf("bk2 size: %d / %d \n", bk2.size(), numBakery);
+        b.attack_defend(r, buc2, bt2, bk2, K, naieve);
+        
 		Plant p3 = new Plant(power_mean, power_sdev, seed);
-		double after = simulate(buc2.toArray(new Bucket[buc2.size()]), bt, bk2.toArray(new Bakery[bk2.size()]), p3, K);
+        Bucket[] buc3 = buc2.toArray(new Bucket[buc2.size()]);
+        Bakery[] bk3 = bk2.toArray(new Bakery[bk2.size()]);
+        Battery[] bt3 = bt2.toArray(new Battery[bt2.size()]);
+        numBucket = buc2.size();
+        numBakery = bk2.size();
+        numBattery = bt2.size();
+		double after = simulate(buc3, bt3, bk3, p3, K);
 		System.out.printf("%10d,%10.2f,%10.2f,%10.2f\n", Integer.parseInt(args[3]), baseline, before, after);
 	}
 }
